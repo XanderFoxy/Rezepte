@@ -9,7 +9,6 @@
         :root {
             --bg-paper: #f4f1ea;
             --text-color: #5d4037;
-            --accent: #8e44ad;
             --overlay-bg: rgba(44, 62, 80, 0.95);
         }
 
@@ -32,16 +31,11 @@
             padding: 8px 15px; cursor: pointer; font-family: 'Dancing Script', cursive; font-size: 1.2rem;
         }
 
-        /* Grid - Keine Stapelung */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; width: 100%; max-width: 1200px; }
-
         .recipe-tile { height: 420px; cursor: pointer; position: relative; }
-        .tile-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
-        .recipe-tile:hover .tile-inner { transform: scale(1.02); }
         .front { width: 100%; height: 100%; border: 8px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); overflow: hidden; position: relative; }
         .front img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* Lower-Third & Flaggen */
         .lower-third {
             position: absolute; bottom: 0; left: 0; width: 100%;
             background: rgba(255, 255, 255, 0.85); padding: 12px 0;
@@ -54,15 +48,12 @@
         .mx { background: linear-gradient(90deg, #006847 33%, #fff 33%, #fff 66%, #CE1126 66%); }
         .eg { background: linear-gradient(180deg, #C8102E 33%, #fff 33%, #fff 66%, #000 66%); }
 
-        /* Buch Pop-up */
         .overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--overlay-bg); display: none; justify-content: center; align-items: center; z-index: 1000;
         }
 
         #book-viewer { display: flex; align-items: center; justify-content: center; position: relative; }
-
-        /* Layout-Modi */
         .view-spread { width: 1100px; height: 750px; display: flex; gap: 2px; }
         .view-single { width: 550px; height: 750px; display: flex; }
 
@@ -71,8 +62,6 @@
             object-fit: contain; box-shadow: 0 0 20px rgba(0,0,0,0.4);
             cursor: pointer;
         }
-
-        .close-hint { position: absolute; top: -50px; right: 0; color: white; cursor: pointer; font-size: 1.2rem; }
     </style>
 </head>
 <body>
@@ -113,98 +102,50 @@
 
 <div class="overlay" id="bookOverlay" onclick="closeBook()">
     <div id="book-viewer" onclick="event.stopPropagation()">
-        <span class="close-hint" onclick="closeBook()">&times; Schließen</span>
         <div id="content-area"></div>
     </div>
 </div>
 
 <script>
-    // Rezept-Datenbank
     const recipes = {
-        sicilia: {
-            steps: [
-                { type: 'single', img: 'IMG_1744.png' },
-                { type: 'spread', imgL: 'IMG_1971.png', imgR: 'IMG_1972.png' }, // Startpunkt
-                { type: 'single', img: 'IMG_1745.png' }
-            ],
-            start: 1
-        },
-        jamie: {
-            steps: [{ type: 'spread', imgL: 'IMG_1968.png', imgR: 'IMG_1969.png' }],
-            start: 0
-        },
-        fior: {
-            steps: [{ type: 'spread', imgL: 'IMG_1957.png', imgR: 'IMG_1958.png' }],
-            start: 0
-        }
+        sicilia: { steps: [{type:'single', img:'IMG_1744.png'}, {type:'spread', imgL:'IMG_1971.png', imgR:'IMG_1972.png'}, {type:'single', img:'IMG_1745.png'}], start: 1 },
+        jamie: { steps: [{type:'spread', imgL:'IMG_1968.png', imgR:'IMG_1969.png'}], start: 0 },
+        fior: { steps: [{type:'spread', imgL:'IMG_1957.png', imgR:'IMG_1958.png'}], start: 0 }
     };
 
-    let currentRecipe = null;
-    let currentStep = 0;
+    let currentRecipe = null, currentStep = 0;
 
     function renderBook() {
         const area = document.getElementById('content-area');
         const step = currentRecipe.steps[currentStep];
-        
         if (step.type === 'single') {
             area.className = "view-single";
-            area.innerHTML = `<img src="Bilder/${step.img}" class="book-page-img" onclick="handleNav(event)">`;
+            area.innerHTML = `<img src="Bilder/${step.img}" class="book-page-img" onclick="handleNav(event, 'center')">`;
         } else {
             area.className = "view-spread";
-            area.innerHTML = `
-                <img src="Bilder/${step.imgL}" class="book-page-img" onclick="handleNav(event, 'left')">
-                <img src="Bilder/${step.imgR}" class="book-page-img" onclick="handleNav(event, 'right')">
-            `;
+            area.innerHTML = `<img src="Bilder/${step.imgL}" class="book-page-img" onclick="handleNav(event, 'left')"><img src="Bilder/${step.imgR}" class="book-page-img" onclick="handleNav(event, 'right')">`;
         }
     }
 
     function handleNav(event, side) {
         const rect = event.target.getBoundingClientRect();
         const x = event.clientX - rect.left;
-        const isLeftSide = side === 'left' || (stepType() === 'single' && x < rect.width / 2);
-        
-        if (isLeftSide) {
-            if (currentStep > 0) {
-                currentStep--;
-                renderBook();
-            } else {
-                closeBook(); // Ganz links am Ende -> Schließen
-            }
+        const isLeftClick = side === 'left' || (side === 'center' && x < rect.width / 2);
+
+        if (isLeftClick) {
+            (currentStep > 0) ? (currentStep--, renderBook()) : closeBook();
         } else {
-            if (currentStep < currentRecipe.steps.length - 1) {
-                currentStep++;
-                renderBook();
-            } else {
-                closeBook(); // Ganz rechts am Ende -> Schließen
-            }
+            (currentStep < currentRecipe.steps.length - 1) ? (currentStep++, renderBook()) : closeBook();
         }
     }
-
-    function stepType() { return currentRecipe.steps[currentStep].type; }
 
     function openSicilia() { currentRecipe = recipes.sicilia; currentStep = recipes.sicilia.start; openModal(); }
     function openJamie() { currentRecipe = recipes.jamie; currentStep = recipes.jamie.start; openModal(); }
     function openFior() { currentRecipe = recipes.fior; currentStep = recipes.fior.start; openModal(); }
-
-    function openModal() {
-        document.getElementById('bookOverlay').style.display = 'flex';
-        renderBook();
-    }
-
+    function openModal() { document.getElementById('bookOverlay').style.display = 'flex'; renderBook(); }
     function closeBook() { document.getElementById('bookOverlay').style.display = 'none'; }
-
-    function showSub(cat) {
-        document.getElementById('homeView').style.display = 'none';
-        document.getElementById(cat + 'View').style.display = 'grid';
-        document.getElementById('backBtn').style.display = 'block';
-    }
-
-    function showHome() {
-        document.querySelectorAll('.grid').forEach(g => g.style.display = 'none');
-        document.getElementById('homeView').style.display = 'grid';
-        document.getElementById('backBtn').style.display = 'none';
-    }
+    function showSub(cat) { document.getElementById('homeView').style.display = 'none'; document.getElementById(cat + 'View').style.display = 'grid'; document.getElementById('backBtn').style.display = 'block'; }
+    function showHome() { document.querySelectorAll('.grid').forEach(g => g.style.display = 'none'); document.getElementById('homeView').style.display = 'grid'; document.getElementById('backBtn').style.display = 'none'; }
 </script>
-
 </body>
 </html>
