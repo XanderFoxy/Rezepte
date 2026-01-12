@@ -9,7 +9,7 @@
             --bg: #121212;
             --card: #1e1e1e;
             --accent: #e67e22;
-            --overlay-bg: rgba(30, 30, 30, 0.75); /* Angegrauter Lower-Third */
+            --overlay-bg: rgba(25, 25, 25, 0.85);
         }
 
         body {
@@ -20,9 +20,8 @@
             display: flex; flex-direction: column; align-items: center;
         }
 
-        h1 { text-align: center; margin-bottom: 40px; font-weight: normal; }
+        h1 { text-align: center; margin-bottom: 40px; font-weight: 300; letter-spacing: 2px; }
 
-        /* Navigation */
         .nav-header { width: 100%; max-width: 1200px; display: flex; justify-content: center; position: relative; }
         .back-btn { 
             position: absolute; left: 0; display: none; 
@@ -43,19 +42,20 @@
         .front, .back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; overflow: hidden; }
         .front img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-        /* Der Lower-Third Frame */
+        /* Lower-Third mit Flaggen-Support */
         .lower-third {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: var(--overlay-bg);
-            padding: 15px 0;
-            text-align: center;
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            background: var(--overlay-bg); padding: 12px 0;
+            display: flex; justify-content: center; align-items: center; gap: 10px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
+        .lower-third h2 { margin: 0; font-size: 20px; font-weight: 300; }
 
-        .lower-third h2 { margin: 0; font-size: 22px; font-weight: 300; letter-spacing: 1px; }
+        /* Flaggen-Styling */
+        .flag { width: 24px; height: 16px; display: inline-block; border: 1px solid rgba(255,255,255,0.2); }
+        .it { background: linear-gradient(90deg, #008C45 33%, #F4F5F0 33%, #F4F5F0 66%, #CD212A 66%); }
+        .mx { background: linear-gradient(90deg, #006847 33%, #F4F5F0 33%, #F4F5F0 66%, #CE1126 66%); }
+        .eg { background: linear-gradient(180deg, #C8102E 33%, #FFFFFF 33%, #FFFFFF 66%, #000000 66%); }
 
         .back { background: var(--accent); transform: rotateY(180deg); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
 
@@ -68,13 +68,13 @@
 
         .book-container { width: 1000px; height: 700px; display: flex; position: relative; perspective: 2500px; }
         .page-left-fixed, .page-right-flip { width: 50%; height: 100%; position: relative; }
-        .page-left-fixed { z-index: 1; overflow: hidden; }
+        .page-left-fixed { z-index: 1; overflow: hidden; background: #000; }
         .page-right-flip { transform-style: preserve-3d; transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1); transform-origin: left; z-index: 2; cursor: pointer; }
-        .page-front, .page-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; overflow: hidden; }
+        .page-front, .page-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; overflow: hidden; background: #000; }
         .page-back { transform: rotateY(180deg); }
-        .page-img { width: 100%; height: 100%; display: block; object-fit: cover; }
+        .page-img { width: 100%; height: 100%; display: block; object-fit: contain; }
         .flipped { transform: rotateY(-180deg); }
-        .close-btn { position: absolute; top: -60px; right: 0; color: white; font-size: 40px; cursor: pointer; }
+        .close-btn { position: absolute; top: -60px; right: 0; color: white; font-size: 40px; cursor: pointer; z-index: 1100; }
     </style>
 </head>
 <body>
@@ -89,7 +89,7 @@
         <div class="tile-inner">
             <div class="front">
                 <img src="Bilder/IMG_1744.png">
-                <div class="lower-third"><h2>Cannoli</h2></div>
+                <div class="lower-third"><span class="flag it"></span><h2>Cannoli</h2></div>
             </div>
             <div class="back"><h2>Cannoli</h2><p>Versionen anzeigen</p></div>
         </div>
@@ -99,19 +99,19 @@
         <div class="tile-inner">
             <div class="front">
                 <img src="Bilder/IMG_1957.jpeg">
-                <div class="lower-third"><h2>Granita</h2></div>
+                <div class="lower-third"><span class="flag it"></span><h2>Granita</h2></div>
             </div>
             <div class="back"><h2>Granita</h2><p>Apri</p></div>
         </div>
     </div>
 
-    <div class="recipe-tile">
+    <div class="recipe-tile" onclick="openBook('IMG_1958.png', 'IMG_1957.png', '')">
         <div class="tile-inner">
             <div class="front">
-                <div style="height:100%; background:#333;"></div>
-                <div class="lower-third"><h2>Fior di Latte</h2></div>
+                <img src="Bilder/IMG_1958.png">
+                <div class="lower-third"><span class="flag it"></span><h2>Fior di Latte</h2></div>
             </div>
-            <div class="back"><h2>Fior di Latte</h2><p>Eiscreme</p></div>
+            <div class="back"><h2>Fior di Latte</h2><p>Direkt zum Rezept</p></div>
         </div>
     </div>
 
@@ -119,7 +119,7 @@
         <div class="tile-inner">
             <div class="front">
                 <div style="height:100%; background:#333;"></div>
-                <div class="lower-third"><h2>Kuschari</h2></div>
+                <div class="lower-third"><span class="flag eg"></span><h2>Kuschari</h2></div>
             </div>
             <div class="back"><h2>Kuschari</h2></div>
         </div>
@@ -129,7 +129,7 @@
         <div class="tile-inner">
             <div class="front">
                 <div style="height:100%; background:#333;"></div>
-                <div class="lower-third"><h2>Chili con Carne</h2></div>
+                <div class="lower-third"><span class="flag mx"></span><h2>Chili con Carne</h2></div>
             </div>
             <div class="back"><h2>Chili con Carne</h2></div>
         </div>
@@ -139,7 +139,7 @@
         <div class="tile-inner">
             <div class="front">
                 <div style="height:100%; background:#333;"></div>
-                <div class="lower-third"><h2>Tiramisu</h2></div>
+                <div class="lower-third"><span class="flag it"></span><h2>Tiramisu</h2></div>
             </div>
             <div class="back"><h2>Tiramisu</h2><p>Versionen anzeigen</p></div>
         </div>
@@ -147,11 +147,11 @@
 </div>
 
 <div id="cannoliView" class="grid" style="display: none;">
-    <div class="recipe-tile" onclick="openBook()">
+    <div class="recipe-tile" onclick="openBook('IMG_1971.png', 'IMG_1972.png', 'IMG_1745.png')">
         <div class="tile-inner">
             <div class="front">
                 <img src="Bilder/IMG_1971.png">
-                <div class="lower-third"><h2>Sicilia Edition</h2></div>
+                <div class="lower-third"><span class="flag it"></span><h2>Sicilia Edition</h2></div>
             </div>
             <div class="back"><h2>Sicilia Edition</h2><p>Buch öffnen</p></div>
         </div>
@@ -162,13 +162,13 @@
     <div class="recipe-tile"><div class="tile-inner"><div class="front"><div class="lower-third"><h2>Version 1</h2></div></div><div class="back"><h2>Tiramisu Classico</h2></div></div></div>
 </div>
 
-<div class="overlay" id="bookOverlay">
-    <div class="book-container">
+<div class="overlay" id="bookOverlay" onclick="closeBook()">
+    <div class="book-container" onclick="event.stopPropagation()">
         <span class="close-btn" onclick="closeBook()">&times;</span>
-        <div class="page-left-fixed"><img src="Bilder/IMG_1971.png" class="page-img"></div>
+        <div class="page-left-fixed"><img src="" id="pageL" class="page-img"></div>
         <div class="page-right-flip" id="flipper" onclick="flipPage()">
-            <div class="page-front"><img src="Bilder/IMG_1972.png" class="page-img"></div>
-            <div class="page-back"><img src="Bilder/IMG_1745.png" class="page-img"></div>
+            <div class="page-front"><img src="" id="pageRF" class="page-img"></div>
+            <div class="page-back"><img src="" id="pageRB" class="page-img"></div>
         </div>
     </div>
 </div>
@@ -189,12 +189,25 @@
         document.getElementById('viewTitle').innerText = "Meine Lieblingsrezepte";
     }
 
-    function openBook() { document.getElementById('bookOverlay').style.display = 'flex'; }
+    // Jetzt flexibel für verschiedene Rezepte
+    function openBook(imgL, imgRF, imgRB) {
+        document.getElementById('pageL').src = "Bilder/" + imgL;
+        document.getElementById('pageRF').src = "Bilder/" + imgRF;
+        document.getElementById('pageRB').src = imgRB ? "Bilder/" + imgRB : ""; // Falls keine 3. Seite existiert
+        document.getElementById('bookOverlay').style.display = 'flex';
+    }
+
     function closeBook() {
         document.getElementById('bookOverlay').style.display = 'none';
         document.getElementById('flipper').classList.remove('flipped');
     }
-    function flipPage() { document.getElementById('flipper').classList.toggle('flipped'); }
+
+    function flipPage() {
+        // Nur umblättern, wenn eine Rückseite (3. Bild) existiert
+        if(document.getElementById('pageRB').getAttribute('src') !== "") {
+            document.getElementById('flipper').classList.toggle('flipped');
+        }
+    }
 </script>
 
 </body>
