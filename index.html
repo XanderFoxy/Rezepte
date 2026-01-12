@@ -73,7 +73,7 @@
 
 <div id="homeView" class="grid">
     <div class="recipe-tile" onclick="showSub('cannoli')">
-        <div class="front"><img src="Bilder/IMG_1745.png"><div class="lower-third"><span class="flag it"></span><h2>Cannoli</h2></div></div>
+        <div class="front"><img src="Bilder/IMG_1744.png"><div class="lower-third"><span class="flag it"></span><h2>Cannoli</h2></div></div>
     </div>
     <div class="recipe-tile" onclick="showSub('granita')">
         <div class="front"><img src="Bilder/IMG_1969.png"><div class="lower-third"><span class="flag it"></span><h2>Granita</h2></div></div>
@@ -90,7 +90,7 @@
 
 <div id="cannoliView" class="grid" style="display: none;">
     <div class="recipe-tile" onclick="openSicilia()">
-        <div class="front"><img src="Bilder/IMG_1745.png"><div class="lower-third"><h2>Sicilia Edition</h2></div></div>
+        <div class="front"><img src="Bilder/IMG_1744.png"><div class="lower-third"><h2>Sicilia Edition</h2></div></div>
     </div>
 </div>
 
@@ -108,7 +108,8 @@
 
 <script>
     const recipes = {
-        sicilia: { steps: [{type:'single', img:'IMG_1744.png'}, {type:'spread', imgL:'IMG_1971.png', imgR:'IMG_1972.png'}, {type:'single', img:'IMG_1745.png'}], start: 1 },
+        // Cannoli: 1745 (Intro) -> Text-Doppelseite -> 1744 (Servieren/Vorschau)
+        sicilia: { steps: [{type:'single', img:'IMG_1745.png'}, {type:'spread', imgL:'IMG_1971.png', imgR:'IMG_1972.png'}, {type:'single', img:'IMG_1744.png'}], start: 1 },
         jamie: { steps: [{type:'spread', imgL:'IMG_1968.png', imgR:'IMG_1969.png'}], start: 0 },
         fior: { steps: [{type:'spread', imgL:'IMG_1957.png', imgR:'IMG_1958.png'}], start: 0 }
     };
