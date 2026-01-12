@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XanderFoxy - Il mio Ricettario</title>
+    <title>XanderFoxy - Il mio Ricettario Polaroid</title>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Playfair+Display:ital,wght@0,400;1,600&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-paper: #f4f1ea;
             --text-color: #5d4037;
-            --overlay-bg: rgba(44, 62, 80, 0.95);
+            --overlay-bg: rgba(20, 20, 20, 0.9);
+            --polaroid-white: #ffffff;
         }
 
         body {
@@ -20,47 +21,108 @@
             font-family: 'Playfair Display', serif;
             margin: 0; padding: 20px;
             display: flex; flex-direction: column; align-items: center;
+            overflow-x: hidden;
         }
 
-        h1 { font-family: 'Dancing Script', cursive; font-size: 3.5rem; text-align: center; margin-bottom: 30px; }
+        h1 { font-family: 'Dancing Script', cursive; font-size: clamp(2.5rem, 8vw, 4rem); text-align: center; margin-bottom: 40px; }
 
         .nav-header { width: 100%; max-width: 1200px; display: flex; justify-content: center; position: relative; }
         .back-btn { 
-            position: absolute; left: 0; display: none; background: #fff; 
+            position: absolute; left: 10px; display: none; background: #fff; 
             border: 1px solid var(--text-color); color: var(--text-color); 
             padding: 8px 15px; cursor: pointer; font-family: 'Dancing Script', cursive; font-size: 1.2rem;
+            z-index: 10;
         }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; width: 100%; max-width: 1200px; }
-        .recipe-tile { height: 420px; cursor: pointer; position: relative; }
-        .front { width: 100%; height: 100%; border: 8px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); overflow: hidden; position: relative; }
-        .front img { width: 100%; height: 100%; object-fit: cover; }
+        /* Polaroid Gallery - Grid Mode */
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            gap: 40px; width: 100%; max-width: 1300px; 
+            padding: 20px;
+        }
 
-        .lower-third {
-            position: absolute; bottom: 0; left: 0; width: 100%;
-            background: rgba(255, 255, 255, 0.85); padding: 12px 0;
+        /* Polaroid Kachel Design */
+        .recipe-tile { 
+            background: var(--polaroid-white);
+            padding: 12px 12px 60px 12px; /* Breiter unterer Rand für Polaroid-Look */
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            aspect-ratio: 4 / 5;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .recipe-tile:hover { transform: rotate(-2deg) scale(1.03); z-index: 5; }
+
+        .photo-container {
+            width: 100%;
+            height: 100%;
+            background: #eee; /* Falls Bild lädt */
+            overflow: hidden;
+        }
+
+        .photo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Bild wird komplett angezeigt, nicht beschnitten */
+            display: block;
+        }
+
+        /* Polaroid Beschriftung (Lower Third) */
+        .polaroid-label {
+            position: absolute;
+            bottom: 0; left: 0; width: 100%;
+            height: 60px;
             display: flex; justify-content: center; align-items: center; gap: 10px;
+            background: var(--polaroid-white);
         }
-        .lower-third h2 { margin: 0; font-size: 1.8rem; font-family: 'Dancing Script', cursive; }
-        
-        .flag { width: 22px; height: 14px; display: inline-block; border: 1px solid #ccc; }
+
+        .polaroid-label h2 { margin: 0; font-size: 1.6rem; font-family: 'Dancing Script', cursive; color: #333; }
+
+        .flag { width: 22px; height: 14px; display: inline-block; border: 1px solid #ddd; }
         .it { background: linear-gradient(90deg, #008C45 33%, #fff 33%, #fff 66%, #CD212A 66%); }
         .mx { background: linear-gradient(90deg, #006847 33%, #fff 33%, #fff 66%, #CE1126 66%); }
         .eg { background: linear-gradient(180deg, #C8102E 33%, #fff 33%, #fff 66%, #000 66%); }
 
+        /* Pop-up Overlay (Responsive Fix) */
         .overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--overlay-bg); display: none; justify-content: center; align-items: center; z-index: 1000;
+            padding: 20px; box-sizing: border-box;
         }
 
-        #book-viewer { display: flex; align-items: center; justify-content: center; position: relative; }
-        .view-spread { width: 1100px; height: 750px; display: flex; gap: 2px; }
-        .view-single { width: 550px; height: 750px; display: flex; }
+        #book-viewer { 
+            display: flex; align-items: center; justify-content: center; 
+            width: 100%; height: 100%; max-width: 95vw; max-height: 90vh;
+        }
+
+        /* Buch-Container Responsive */
+        .view-spread { width: 100%; height: 100%; display: flex; gap: 4px; }
+        .view-single { width: 100%; height: 100%; max-width: 600px; display: flex; }
 
         .book-page-img {
-            width: 100%; height: 100%; background: white; 
-            object-fit: contain; box-shadow: 0 0 20px rgba(0,0,0,0.4);
+            flex: 1;
+            height: 100%;
+            background: white; 
+            object-fit: contain; 
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
             cursor: pointer;
+            min-width: 0; /* Verhindert Flex-Overflow */
+        }
+
+        .close-hint { 
+            position: absolute; top: 15px; right: 25px; color: white; 
+            cursor: pointer; font-size: 2.5rem; font-family: Arial, sans-serif;
+            z-index: 1100;
+        }
+
+        /* Mobile Anpassungen */
+        @media (max-width: 768px) {
+            .view-spread { flex-direction: column; gap: 10px; }
+            .grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
         }
     </style>
 </head>
@@ -68,39 +130,52 @@
 
 <div class="nav-header">
     <button id="backBtn" class="back-btn" onclick="showHome()">← Zurück</button>
-    <h1>Meine Lieblingsrezepte</h1>
+    <h1>Il mio Ricettario</h1>
 </div>
 
 <div id="homeView" class="grid">
     <div class="recipe-tile" onclick="showSub('cannoli')">
-        <div class="front"><img src="Bilder/IMG_1744.png"><div class="lower-third"><span class="flag it"></span><h2>Cannoli</h2></div></div>
+        <div class="photo-container"><img src="Bilder/IMG_1744.png"></div>
+        <div class="polaroid-label"><span class="flag it"></span><h2>Cannoli</h2></div>
     </div>
     <div class="recipe-tile" onclick="showSub('granita')">
-        <div class="front"><img src="Bilder/IMG_1969.png"><div class="lower-third"><span class="flag it"></span><h2>Granita</h2></div></div>
+        <div class="photo-container"><img src="Bilder/IMG_1969.png"></div>
+        <div class="polaroid-label"><span class="flag it"></span><h2>Granita</h2></div>
     </div>
     <div class="recipe-tile" onclick="openFior()">
-        <div class="front"><img src="Bilder/IMG_1958.png"><div class="lower-third"><span class="flag it"></span><h2>Fior di Latte</h2></div></div>
+        <div class="photo-container"><img src="Bilder/IMG_1958.png"></div>
+        <div class="polaroid-label"><span class="flag it"></span><h2>Fior di Latte</h2></div>
     </div>
-    <div class="recipe-tile"><div class="front"><div style="height:100%;background:#e0dbcf"></div><div class="lower-third"><span class="flag eg"></span><h2>Kuschari</h2></div></div></div>
-    <div class="recipe-tile"><div class="front"><div style="height:100%;background:#e0dbcf"></div><div class="lower-third"><span class="flag mx"></span><h2>Chili con Carne</h2></div></div></div>
+    <div class="recipe-tile">
+        <div class="photo-container"><div style="height:100%;background:#e0dbcf"></div></div>
+        <div class="polaroid-label"><span class="flag eg"></span><h2>Kuschari</h2></div>
+    </div>
+    <div class="recipe-tile">
+        <div class="photo-container"><div style="height:100%;background:#e0dbcf"></div></div>
+        <div class="polaroid-label"><span class="flag mx"></span><h2>Chili con Carne</h2></div>
+    </div>
     <div class="recipe-tile" onclick="showSub('tiramisu')">
-        <div class="front"><div style="height:100%;background:#e0dbcf"></div><div class="lower-third"><span class="flag it"></span><h2>Tiramisu</h2></div></div>
+        <div class="photo-container"><div style="height:100%;background:#e0dbcf"></div></div>
+        <div class="polaroid-label"><span class="flag it"></span><h2>Tiramisu</h2></div>
     </div>
 </div>
 
 <div id="cannoliView" class="grid" style="display: none;">
     <div class="recipe-tile" onclick="openSicilia()">
-        <div class="front"><img src="Bilder/IMG_1744.png"><div class="lower-third"><h2>Sicilia Edition</h2></div></div>
+        <div class="photo-container"><img src="Bilder/IMG_1744.png"></div>
+        <div class="polaroid-label"><h2>Sicilia Edition</h2></div>
     </div>
 </div>
 
 <div id="granitaView" class="grid" style="display: none;">
     <div class="recipe-tile" onclick="openJamie()">
-        <div class="front"><img src="Bilder/IMG_1969.png"><div class="lower-third"><h2>Jamie Cooks Italy</h2></div></div>
+        <div class="photo-container"><img src="Bilder/IMG_1969.png"></div>
+        <div class="polaroid-label"><h2>Jamie Cooks Italy</h2></div>
     </div>
 </div>
 
 <div class="overlay" id="bookOverlay" onclick="closeBook()">
+    <span class="close-hint" onclick="closeBook()">&times;</span>
     <div id="book-viewer" onclick="event.stopPropagation()">
         <div id="content-area"></div>
     </div>
@@ -108,9 +183,11 @@
 
 <script>
     const recipes = {
-        // Cannoli: 1745 (Intro) -> Text-Doppelseite -> 1744 (Servieren/Vorschau)
+        // Cannoli Sicilia: 1745 (Intro) -> Spread (1971|1972) -> 1744 (End/Preview)
         sicilia: { steps: [{type:'single', img:'IMG_1745.png'}, {type:'spread', imgL:'IMG_1971.png', imgR:'IMG_1972.png'}, {type:'single', img:'IMG_1744.png'}], start: 1 },
+        // Granita: Spread (1968|1969)
         jamie: { steps: [{type:'spread', imgL:'IMG_1968.png', imgR:'IMG_1969.png'}], start: 0 },
+        // Fior di Latte: Text (1957) | Foto (1958)
         fior: { steps: [{type:'spread', imgL:'IMG_1957.png', imgR:'IMG_1958.png'}], start: 0 }
     };
 
@@ -124,7 +201,10 @@
             area.innerHTML = `<img src="Bilder/${step.img}" class="book-page-img" onclick="handleNav(event, 'center')">`;
         } else {
             area.className = "view-spread";
-            area.innerHTML = `<img src="Bilder/${step.imgL}" class="book-page-img" onclick="handleNav(event, 'left')"><img src="Bilder/${step.imgR}" class="book-page-img" onclick="handleNav(event, 'right')">`;
+            area.innerHTML = `
+                <img src="Bilder/${step.imgL}" class="book-page-img" onclick="handleNav(event, 'left')">
+                <img src="Bilder/${step.imgR}" class="book-page-img" onclick="handleNav(event, 'right')">
+            `;
         }
     }
 
@@ -145,8 +225,16 @@
     function openFior() { currentRecipe = recipes.fior; currentStep = recipes.fior.start; openModal(); }
     function openModal() { document.getElementById('bookOverlay').style.display = 'flex'; renderBook(); }
     function closeBook() { document.getElementById('bookOverlay').style.display = 'none'; }
-    function showSub(cat) { document.getElementById('homeView').style.display = 'none'; document.getElementById(cat + 'View').style.display = 'grid'; document.getElementById('backBtn').style.display = 'block'; }
-    function showHome() { document.querySelectorAll('.grid').forEach(g => g.style.display = 'none'); document.getElementById('homeView').style.display = 'grid'; document.getElementById('backBtn').style.display = 'none'; }
+    function showSub(cat) { 
+        document.querySelectorAll('.grid').forEach(g => g.style.display = 'none');
+        document.getElementById(cat + 'View').style.display = 'grid'; 
+        document.getElementById('backBtn').style.display = 'block'; 
+    }
+    function showHome() { 
+        document.querySelectorAll('.grid').forEach(g => g.style.display = 'none'); 
+        document.getElementById('homeView').style.display = 'grid'; 
+        document.getElementById('backBtn').style.display = 'none'; 
+    }
 </script>
 </body>
 </html>
