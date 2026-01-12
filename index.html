@@ -13,10 +13,8 @@
         }
 
         body {
-            background-color: var(--bg);
-            color: white;
-            font-family: 'Segoe UI', sans-serif;
-            margin: 0; padding: 20px;
+            background-color: var(--bg); color: white;
+            font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px;
             display: flex; flex-direction: column; align-items: center;
         }
 
@@ -24,17 +22,12 @@
 
         .nav-header { width: 100%; max-width: 1200px; display: flex; justify-content: center; position: relative; }
         .back-btn { 
-            position: absolute; left: 0; display: none; 
-            background: #333; border: 1px solid var(--accent); 
-            color: white; padding: 10px 15px; border-radius: 0; cursor: pointer;
+            position: absolute; left: 0; display: none; background: #333; 
+            border: 1px solid var(--accent); color: white; padding: 10px 15px; cursor: pointer;
         }
 
         /* Grid - Keine Stapelung */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px; width: 100%; max-width: 1200px;
-        }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; width: 100%; max-width: 1200px; }
 
         .recipe-tile { height: 400px; perspective: 1000px; cursor: pointer; position: relative; }
         .tile-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
@@ -42,16 +35,12 @@
         .front, .back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; overflow: hidden; }
         .front img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-        /* Lower-Third mit Flaggen-Support */
+        /* Lower-Third & Flaggen */
         .lower-third {
             position: absolute; bottom: 0; left: 0; width: 100%;
             background: var(--overlay-bg); padding: 12px 0;
             display: flex; justify-content: center; align-items: center; gap: 10px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .lower-third h2 { margin: 0; font-size: 20px; font-weight: 300; }
-
-        /* Flaggen-Styling */
         .flag { width: 24px; height: 16px; display: inline-block; border: 1px solid rgba(255,255,255,0.2); }
         .it { background: linear-gradient(90deg, #008C45 33%, #F4F5F0 33%, #F4F5F0 66%, #CD212A 66%); }
         .mx { background: linear-gradient(90deg, #006847 33%, #F4F5F0 33%, #F4F5F0 66%, #CE1126 66%); }
@@ -59,22 +48,30 @@
 
         .back { background: var(--accent); transform: rotateY(180deg); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
 
-        /* Buch Pop-up */
+        /* Dynamisches Pop-up */
         .overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); display: none;
-            justify-content: center; align-items: center; z-index: 1000;
+            background: rgba(0,0,0,0.95); display: none; justify-content: center; align-items: center; z-index: 1000;
         }
 
-        .book-container { width: 1000px; height: 700px; display: flex; position: relative; perspective: 2500px; }
+        .book-container { display: flex; position: relative; perspective: 2500px; transition: width 0.5s; }
+        
+        /* Modus: Buch (2-Seiten) */
+        .mode-book { width: 1000px; height: 700px; }
+        /* Modus: Einzel (1-Seite) */
+        .mode-single { width: 500px; height: 700px; }
+
         .page-left-fixed, .page-right-flip { width: 50%; height: 100%; position: relative; }
+        .mode-single .page-left-fixed { display: none; }
+        .mode-single .page-right-flip { width: 100%; transform: none !important; cursor: default; }
+
         .page-left-fixed { z-index: 1; overflow: hidden; background: #000; }
-        .page-right-flip { transform-style: preserve-3d; transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1); transform-origin: left; z-index: 2; cursor: pointer; }
+        .page-right-flip { transform-style: preserve-3d; transition: transform 1s; transform-origin: left; z-index: 2; cursor: pointer; }
         .page-front, .page-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; overflow: hidden; background: #000; }
         .page-back { transform: rotateY(180deg); }
         .page-img { width: 100%; height: 100%; display: block; object-fit: contain; }
         .flipped { transform: rotateY(-180deg); }
-        .close-btn { position: absolute; top: -60px; right: 0; color: white; font-size: 40px; cursor: pointer; z-index: 1100; }
+        .close-btn { position: absolute; top: -60px; right: 0; color: white; font-size: 40px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -87,83 +84,49 @@
 <div id="homeView" class="grid">
     <div class="recipe-tile" onclick="showSub('cannoli')">
         <div class="tile-inner">
-            <div class="front">
-                <img src="Bilder/IMG_1744.png">
-                <div class="lower-third"><span class="flag it"></span><h2>Cannoli</h2></div>
-            </div>
+            <div class="front"><img src="Bilder/IMG_1744.png"><div class="lower-third"><span class="flag it"></span><h2>Cannoli</h2></div></div>
             <div class="back"><h2>Cannoli</h2><p>Versionen anzeigen</p></div>
         </div>
     </div>
-
-    <div class="recipe-tile">
+    <div class="recipe-tile" onclick="showSub('granita')">
         <div class="tile-inner">
-            <div class="front">
-                <img src="Bilder/IMG_1957.jpeg">
-                <div class="lower-third"><span class="flag it"></span><h2>Granita</h2></div>
-            </div>
-            <div class="back"><h2>Granita</h2><p>Apri</p></div>
+            <div class="front"><img src="Bilder/IMG_1969.png"><div class="lower-third"><span class="flag it"></span><h2>Granita</h2></div></div>
+            <div class="back"><h2>Granita</h2><p>Versionen anzeigen</p></div>
         </div>
     </div>
-
     <div class="recipe-tile" onclick="openBook('IMG_1958.png', 'IMG_1957.png', '')">
         <div class="tile-inner">
-            <div class="front">
-                <img src="Bilder/IMG_1958.png">
-                <div class="lower-third"><span class="flag it"></span><h2>Fior di Latte</h2></div>
-            </div>
+            <div class="front"><img src="Bilder/IMG_1958.png"><div class="lower-third"><span class="flag it"></span><h2>Fior di Latte</h2></div></div>
             <div class="back"><h2>Fior di Latte</h2><p>Direkt zum Rezept</p></div>
         </div>
     </div>
-
-    <div class="recipe-tile">
-        <div class="tile-inner">
-            <div class="front">
-                <div style="height:100%; background:#333;"></div>
-                <div class="lower-third"><span class="flag eg"></span><h2>Kuschari</h2></div>
-            </div>
-            <div class="back"><h2>Kuschari</h2></div>
-        </div>
-    </div>
-
-    <div class="recipe-tile">
-        <div class="tile-inner">
-            <div class="front">
-                <div style="height:100%; background:#333;"></div>
-                <div class="lower-third"><span class="flag mx"></span><h2>Chili con Carne</h2></div>
-            </div>
-            <div class="back"><h2>Chili con Carne</h2></div>
-        </div>
-    </div>
-
+    <div class="recipe-tile"><div class="tile-inner"><div class="front"><div style="height:100%; background:#333;"></div><div class="lower-third"><span class="flag eg"></span><h2>Kuschari</h2></div></div><div class="back"><h2>Kuschari</h2></div></div></div>
+    <div class="recipe-tile"><div class="tile-inner"><div class="front"><div style="height:100%; background:#333;"></div><div class="lower-third"><span class="flag mx"></span><h2>Chili con Carne</h2></div></div><div class="back"><h2>Chili con Carne</h2></div></div></div>
     <div class="recipe-tile" onclick="showSub('tiramisu')">
-        <div class="tile-inner">
-            <div class="front">
-                <div style="height:100%; background:#333;"></div>
-                <div class="lower-third"><span class="flag it"></span><h2>Tiramisu</h2></div>
-            </div>
-            <div class="back"><h2>Tiramisu</h2><p>Versionen anzeigen</p></div>
+        <div class="tile-inner"><div class="front"><div style="height:100%; background:#333;"></div><div class="lower-third"><span class="flag it"></span><h2>Tiramisu</h2></div></div><div class="back"><h2>Tiramisu</h2><p>Versionen</p></div></div>
+    </div>
+</div>
+
+<div id="granitaView" class="grid" style="display: none;">
+    <div class="recipe-tile" onclick="openBook('', 'IMG_1968.png', '')"> <div class="tile-inner">
+            <div class="front"><img src="Bilder/IMG_1969.png"><div class="lower-third"><span class="flag it"></span><h2>Jamie Cooks Italy</h2></div></div>
+            <div class="back"><h2>Jamie Edition</h2><p>Einzelseite öffnen</p></div>
         </div>
     </div>
+    <div class="recipe-tile"><div class="tile-inner"><div class="front"><div style="background:#444;height:100%"></div><div class="lower-third"><h2>Version 2</h2></div></div></div></div>
+    <div class="recipe-tile"><div class="tile-inner"><div class="front"><div style="background:#444;height:100%"></div><div class="lower-third"><h2>Version 3</h2></div></div></div></div>
 </div>
 
 <div id="cannoliView" class="grid" style="display: none;">
     <div class="recipe-tile" onclick="openBook('IMG_1971.png', 'IMG_1972.png', 'IMG_1745.png')">
-        <div class="tile-inner">
-            <div class="front">
-                <img src="Bilder/IMG_1971.png">
-                <div class="lower-third"><span class="flag it"></span><h2>Sicilia Edition</h2></div>
-            </div>
-            <div class="back"><h2>Sicilia Edition</h2><p>Buch öffnen</p></div>
-        </div>
+        <div class="tile-inner"><div class="front"><img src="Bilder/IMG_1971.png"><div class="lower-third"><h2>Sicilia Edition</h2></div></div></div>
     </div>
 </div>
 
-<div id="tiramisuView" class="grid" style="display: none;">
-    <div class="recipe-tile"><div class="tile-inner"><div class="front"><div class="lower-third"><h2>Version 1</h2></div></div><div class="back"><h2>Tiramisu Classico</h2></div></div></div>
-</div>
+<div id="tiramisuView" class="grid" style="display: none;"></div>
 
 <div class="overlay" id="bookOverlay" onclick="closeBook()">
-    <div class="book-container" onclick="event.stopPropagation()">
+    <div class="book-container" id="bookCont" onclick="event.stopPropagation()">
         <span class="close-btn" onclick="closeBook()">&times;</span>
         <div class="page-left-fixed"><img src="" id="pageL" class="page-img"></div>
         <div class="page-right-flip" id="flipper" onclick="flipPage()">
@@ -182,18 +145,28 @@
     }
 
     function showHome() {
+        document.querySelectorAll('.grid').forEach(g => g.style.display = 'none');
         document.getElementById('homeView').style.display = 'grid';
-        document.getElementById('cannoliView').style.display = 'none';
-        document.getElementById('tiramisuView').style.display = 'none';
         document.getElementById('backBtn').style.display = 'none';
         document.getElementById('viewTitle').innerText = "Meine Lieblingsrezepte";
     }
 
-    // Jetzt flexibel für verschiedene Rezepte
     function openBook(imgL, imgRF, imgRB) {
-        document.getElementById('pageL').src = "Bilder/" + imgL;
-        document.getElementById('pageRF').src = "Bilder/" + imgRF;
-        document.getElementById('pageRB').src = imgRB ? "Bilder/" + imgRB : ""; // Falls keine 3. Seite existiert
+        const cont = document.getElementById('bookCont');
+        const pL = document.getElementById('pageL');
+        const pRF = document.getElementById('pageRF');
+        const pRB = document.getElementById('pageRB');
+
+        // Dynamische Logik: 1 Seite vs. Buch
+        if (imgL === "" && imgRB === "") {
+            cont.className = "book-container mode-single";
+            pRF.src = "Bilder/" + imgRF;
+        } else {
+            cont.className = "book-container mode-book";
+            pL.src = "Bilder/" + imgL;
+            pRF.src = "Bilder/" + imgRF;
+            pRB.src = imgRB ? "Bilder/" + imgRB : "";
+        }
         document.getElementById('bookOverlay').style.display = 'flex';
     }
 
@@ -203,12 +176,10 @@
     }
 
     function flipPage() {
-        // Nur umblättern, wenn eine Rückseite (3. Bild) existiert
-        if(document.getElementById('pageRB').getAttribute('src') !== "") {
+        if(document.getElementById('pageRB').getAttribute('src') !== "" && !document.getElementById('bookCont').classList.contains('mode-single')) {
             document.getElementById('flipper').classList.toggle('flipped');
         }
     }
 </script>
-
 </body>
 </html>
