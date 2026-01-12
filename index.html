@@ -3,118 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XanderFoxy - Meine Lieblingsrezepte</title>
+    <title>XanderFoxy - Il mio Ricettario</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Playfair+Display:ital,wght@0,400;1,600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #121212;
-            --card: #1e1e1e;
-            --accent: #e67e22;
-            --overlay-bg: rgba(25, 25, 25, 0.85);
+            --bg-paper: #f4f1ea;
+            --paper-darker: #e8e4d9;
+            --accent: #8e44ad;
+            --text-color: #2c3e50;
+            --overlay-bg: rgba(44, 62, 80, 0.85);
         }
 
         body {
-            background-color: var(--bg); color: white;
-            font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px;
+            /* Subtile Papierstruktur durch einen CSS-Gradienten */
+            background-color: var(--bg-paper);
+            background-image: 
+                radial-gradient(circle at 2px 2px, rgba(0,0,0,0.02) 1px, transparent 0);
+            background-size: 24px 24px;
+            color: var(--text-color);
+            font-family: 'Playfair Display', serif;
+            margin: 0; padding: 20px;
             display: flex; flex-direction: column; align-items: center;
         }
 
-        h1 { text-align: center; margin-bottom: 40px; font-weight: 300; letter-spacing: 2px; }
+        /* Schnörkelige Überschrift */
+        h1, h2 { 
+            font-family: 'Dancing Script', cursive; 
+            text-align: center; 
+            margin-bottom: 30px; 
+            color: #5d4037;
+            font-size: 3.5rem;
+        }
 
         .nav-header { width: 100%; max-width: 1200px; display: flex; justify-content: center; position: relative; }
         .back-btn { 
-            position: absolute; left: 0; display: none; background: #333; 
-            border: 1px solid var(--accent); color: white; padding: 10px 15px; cursor: pointer;
+            position: absolute; left: 0; display: none; background: #fff; 
+            border: 1px solid #5d4037; color: #5d4037; padding: 10px 15px; 
+            cursor: pointer; font-family: 'Dancing Script', cursive; font-size: 1.2rem;
         }
 
         /* Grid - Keine Stapelung */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; width: 100%; max-width: 1200px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; width: 100%; max-width: 1200px; }
 
-        .recipe-tile { height: 400px; perspective: 1000px; cursor: pointer; position: relative; }
+        .recipe-tile { height: 420px; perspective: 1200px; cursor: pointer; position: relative; }
         .tile-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
         .recipe-tile:hover .tile-inner { transform: rotateY(180deg); }
-        .front, .back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; overflow: hidden; }
+        .front, .back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border: 8px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .front img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
         /* Lower-Third & Flaggen */
         .lower-third {
             position: absolute; bottom: 0; left: 0; width: 100%;
-            background: var(--overlay-bg); padding: 12px 0;
+            background: rgba(255, 255, 255, 0.9); padding: 12px 0;
             display: flex; justify-content: center; align-items: center; gap: 10px;
         }
-        .flag { width: 24px; height: 16px; display: inline-block; border: 1px solid rgba(255,255,255,0.2); }
-        .it { background: linear-gradient(90deg, #008C45 33%, #F4F5F0 33%, #F4F5F0 66%, #CD212A 66%); }
-        .mx { background: linear-gradient(90deg, #006847 33%, #F4F5F0 33%, #F4F5F0 66%, #CE1126 66%); }
-        .eg { background: linear-gradient(180deg, #C8102E 33%, #FFFFFF 33%, #FFFFFF 66%, #000000 66%); }
+        .lower-third h2 { margin: 0; font-size: 1.8rem; color: #5d4037; }
+        
+        .flag { width: 20px; height: 14px; display: inline-block; border: 1px solid #ccc; }
+        .it { background: linear-gradient(90deg, #008C45 33%, #fff 33%, #fff 66%, #CD212A 66%); }
+        .mx { background: linear-gradient(90deg, #006847 33%, #fff 33%, #fff 66%, #CE1126 66%); }
+        .eg { background: linear-gradient(180deg, #C8102E 33%, #fff 33%, #fff 66%, #000 66%); }
 
-        .back { background: var(--accent); transform: rotateY(180deg); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        .back { background: #fdfaf1; transform: rotateY(180deg); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
 
-        /* Dynamisches Pop-up */
+        /* Buch-Pop-up im Pergament-Stil */
         .overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); display: none; justify-content: center; align-items: center; z-index: 1000;
+            background: var(--overlay-bg); display: none; justify-content: center; align-items: center; z-index: 1000;
         }
 
-        .book-container { display: flex; position: relative; perspective: 2500px; transition: width 0.5s; }
-        
-        /* Modus: Buch (2-Seiten) */
-        .mode-book { width: 1000px; height: 700px; }
-        /* Modus: Einzel (1-Seite) */
-        .mode-single { width: 500px; height: 700px; }
+        .book-container { display: flex; position: relative; perspective: 2500px; }
+        .mode-book { width: 1100px; height: 750px; }
+        .mode-single { width: 550px; height: 750px; }
 
-        .page-left-fixed, .page-right-flip { width: 50%; height: 100%; position: relative; }
+        .page-left-fixed, .page-right-flip { width: 50%; height: 100%; position: relative; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.3); }
         .mode-single .page-left-fixed { display: none; }
-        .mode-single .page-right-flip { width: 100%; transform: none !important; cursor: default; }
+        .mode-single .page-right-flip { width: 100%; transform: none !important; }
 
-        .page-left-fixed { z-index: 1; overflow: hidden; background: #000; }
+        .page-left-fixed { z-index: 1; border-right: 1px solid #ddd; }
         .page-right-flip { transform-style: preserve-3d; transition: transform 1s; transform-origin: left; z-index: 2; cursor: pointer; }
-        .page-front, .page-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; overflow: hidden; background: #000; }
-        .page-back { transform: rotateY(180deg); }
-        .page-img { width: 100%; height: 100%; display: block; object-fit: contain; }
+        .page-front, .page-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; background: white; }
+        .page-back { transform: rotateY(180deg); border-left: 1px solid #ddd; }
+        .page-img { width: 100%; height: 100%; display: block; object-fit: contain; padding: 10px; box-sizing: border-box; }
+        
         .flipped { transform: rotateY(-180deg); }
-        .close-btn { position: absolute; top: -60px; right: 0; color: white; font-size: 40px; cursor: pointer; }
+        .close-btn { position: absolute; top: -50px; right: 0; color: white; font-size: 3rem; cursor: pointer; font-family: serif; }
     </style>
 </head>
 <body>
 
 <div class="nav-header">
     <button id="backBtn" class="back-btn" onclick="showHome()">← Zurück</button>
-    <h1 id="viewTitle">Meine Lieblingsrezepte</h1>
+    <h1>Meine Lieblingsrezepte</h1>
 </div>
 
 <div id="homeView" class="grid">
     <div class="recipe-tile" onclick="showSub('cannoli')">
         <div class="tile-inner">
             <div class="front"><img src="Bilder/IMG_1744.png"><div class="lower-third"><span class="flag it"></span><h2>Cannoli</h2></div></div>
-            <div class="back"><h2>Cannoli</h2><p>Versionen anzeigen</p></div>
+            <div class="back"><h2>Cannoli</h2><p>Le delizie siciliane</p></div>
         </div>
     </div>
     <div class="recipe-tile" onclick="showSub('granita')">
         <div class="tile-inner">
             <div class="front"><img src="Bilder/IMG_1969.png"><div class="lower-third"><span class="flag it"></span><h2>Granita</h2></div></div>
-            <div class="back"><h2>Granita</h2><p>Versionen anzeigen</p></div>
+            <div class="back"><h2>Granita</h2><p>Fresco e dolce</p></div>
         </div>
     </div>
-    <div class="recipe-tile" onclick="openBook('IMG_1958.png', 'IMG_1957.png', '')">
+    <div class="recipe-tile" onclick="openBook('IMG_1957.png', 'IMG_1958.png', '')">
         <div class="tile-inner">
             <div class="front"><img src="Bilder/IMG_1958.png"><div class="lower-third"><span class="flag it"></span><h2>Fior di Latte</h2></div></div>
-            <div class="back"><h2>Fior di Latte</h2><p>Direkt zum Rezept</p></div>
+            <div class="back"><h2>Fior di Latte</h2><p>Il gelato puro</p></div>
         </div>
     </div>
-    <div class="recipe-tile"><div class="tile-inner"><div class="front"><div style="height:100%; background:#333;"></div><div class="lower-third"><span class="flag eg"></span><h2>Kuschari</h2></div></div><div class="back"><h2>Kuschari</h2></div></div></div>
-    <div class="recipe-tile"><div class="tile-inner"><div class="front"><div style="height:100%; background:#333;"></div><div class="lower-third"><span class="flag mx"></span><h2>Chili con Carne</h2></div></div><div class="back"><h2>Chili con Carne</h2></div></div></div>
+    <div class="recipe-tile"><div class="tile-inner"><div class="front"><div style="height:100%; background:#e0dbcf;"></div><div class="lower-third"><span class="flag eg"></span><h2>Kuschari</h2></div></div><div class="back"><h2>Kuschari</h2></div></div></div>
+    <div class="recipe-tile"><div class="tile-inner"><div class="front"><div style="height:100%; background:#e0dbcf;"></div><div class="lower-third"><span class="flag mx"></span><h2>Chili con Carne</h2></div></div><div class="back"><h2>Chili con Carne</h2></div></div></div>
     <div class="recipe-tile" onclick="showSub('tiramisu')">
-        <div class="tile-inner"><div class="front"><div style="height:100%; background:#333;"></div><div class="lower-third"><span class="flag it"></span><h2>Tiramisu</h2></div></div><div class="back"><h2>Tiramisu</h2><p>Versionen</p></div></div>
+        <div class="tile-inner"><div class="front"><div style="height:100%; background:#e0dbcf;"></div><div class="lower-third"><span class="flag it"></span><h2>Tiramisu</h2></div></div><div class="back"><h2>Tiramisu</h2></div></div>
     </div>
 </div>
 
 <div id="granitaView" class="grid" style="display: none;">
-    <div class="recipe-tile" onclick="openBook('', 'IMG_1968.png', '')"> <div class="tile-inner">
-            <div class="front"><img src="Bilder/IMG_1969.png"><div class="lower-third"><span class="flag it"></span><h2>Jamie Cooks Italy</h2></div></div>
-            <div class="back"><h2>Jamie Edition</h2><p>Einzelseite öffnen</p></div>
+    <div class="recipe-tile" onclick="openBook('IMG_1968.png', 'IMG_1969.png', '')">
+        <div class="tile-inner">
+            <div class="front"><img src="Bilder/IMG_1969.png"><div class="lower-third"><h2>Jamie Cooks Italy</h2></div></div>
+            <div class="back"><h2>Jamie Edition</h2></div>
         </div>
     </div>
-    <div class="recipe-tile"><div class="tile-inner"><div class="front"><div style="background:#444;height:100%"></div><div class="lower-third"><h2>Version 2</h2></div></div></div></div>
-    <div class="recipe-tile"><div class="tile-inner"><div class="front"><div style="background:#444;height:100%"></div><div class="lower-third"><h2>Version 3</h2></div></div></div></div>
 </div>
 
 <div id="cannoliView" class="grid" style="display: none;">
@@ -122,8 +137,6 @@
         <div class="tile-inner"><div class="front"><img src="Bilder/IMG_1971.png"><div class="lower-third"><h2>Sicilia Edition</h2></div></div></div>
     </div>
 </div>
-
-<div id="tiramisuView" class="grid" style="display: none;"></div>
 
 <div class="overlay" id="bookOverlay" onclick="closeBook()">
     <div class="book-container" id="bookCont" onclick="event.stopPropagation()">
@@ -141,14 +154,12 @@
         document.getElementById('homeView').style.display = 'none';
         document.getElementById(cat + 'View').style.display = 'grid';
         document.getElementById('backBtn').style.display = 'block';
-        document.getElementById('viewTitle').innerText = cat.charAt(0).toUpperCase() + cat.slice(1);
     }
 
     function showHome() {
         document.querySelectorAll('.grid').forEach(g => g.style.display = 'none');
         document.getElementById('homeView').style.display = 'grid';
         document.getElementById('backBtn').style.display = 'none';
-        document.getElementById('viewTitle').innerText = "Meine Lieblingsrezepte";
     }
 
     function openBook(imgL, imgRF, imgRB) {
@@ -157,13 +168,12 @@
         const pRF = document.getElementById('pageRF');
         const pRB = document.getElementById('pageRB');
 
-        // Dynamische Logik: 1 Seite vs. Buch
         if (imgL === "" && imgRB === "") {
             cont.className = "book-container mode-single";
             pRF.src = "Bilder/" + imgRF;
         } else {
             cont.className = "book-container mode-book";
-            pL.src = "Bilder/" + imgL;
+            pL.src = imgL ? "Bilder/" + imgL : "";
             pRF.src = "Bilder/" + imgRF;
             pRB.src = imgRB ? "Bilder/" + imgRB : "";
         }
