@@ -9,7 +9,6 @@
             --bg: #121212;
             --card: #1e1e1e;
             --accent: #e67e22;
-            --paper: #ffffff;
         }
 
         body {
@@ -24,10 +23,10 @@
         .nav-header { width: 100%; max-width: 1200px; display: flex; align-items: center; gap: 20px; margin-bottom: 20px; }
         .back-btn { 
             display: none; background: #333; border: 1px solid var(--accent); 
-            color: white; padding: 10px 15px; border-radius: 8px; cursor: pointer;
+            color: white; padding: 10px 15px; border-radius: 4px; cursor: pointer;
         }
 
-        /* Grid - Keine Stapelung */
+        /* Grid - Keine Stapelung (Non-stacked Gallery) */
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -37,11 +36,11 @@
         .recipe-tile { height: 400px; perspective: 1000px; cursor: pointer; }
         .tile-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
         .recipe-tile:hover .tile-inner { transform: rotateY(180deg); }
-        .front, .back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 15px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.5); }
+        .front, .back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; overflow: hidden; }
         .front img { width: 100%; height: 100%; object-fit: cover; }
         .back { background: var(--accent); transform: rotateY(180deg); display: flex; flex-direction: column; justify-content: center; align-items: center; }
 
-        /* Overlay & Buch-Mechanik */
+        /* Overlay & Buch-Mechanik ohne dekorative Effekte */
         .overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); display: none;
@@ -49,14 +48,13 @@
         }
 
         .book-container {
-            width: 1000px; /* Gesamtbreite des Buches */
-            height: 700px; 
+            width: 1000px; /* Die exakte Breite beider Bilder zusammen */
+            height: 700px; /* Die exakte Höhe */
             display: flex;
             position: relative;
             perspective: 2500px;
         }
 
-        /* Beide Hälften sind exakt 50% breit */
         .page-left-fixed, .page-right-flip {
             width: 50%;
             height: 100%;
@@ -64,17 +62,15 @@
         }
 
         .page-left-fixed {
-            background: var(--paper);
-            border-radius: 10px 0 0 10px;
-            box-shadow: inset -15px 0 30px rgba(0,0,0,0.15);
             z-index: 1;
             overflow: hidden;
+            background: #000; /* Hintergrund falls Bild lädt */
         }
 
         .page-right-flip {
             transform-style: preserve-3d;
             transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1);
-            transform-origin: left; /* Drehpunkt exakt in der Mitte */
+            transform-origin: left;
             z-index: 2;
             cursor: pointer;
         }
@@ -84,23 +80,17 @@
             width: 100%;
             height: 100%;
             backface-visibility: hidden;
-            background: var(--paper);
             overflow: hidden;
         }
 
-        .page-front { border-radius: 0 10px 10px 0; }
-        .page-back { 
-            transform: rotateY(180deg); 
-            border-radius: 10px 0 0 10px;
-            box-shadow: inset -15px 0 30px rgba(0,0,0,0.15);
-        }
+        .page-back { transform: rotateY(180deg); }
 
-        /* Das Bild füllt die Seite komplett aus */
+        /* Bilder füllen die Container exakt aus */
         .page-img {
             width: 100%;
             height: 100%;
-            object-fit: contain; /* Bild wird so groß wie möglich angezeigt */
             display: block;
+            object-fit: cover; /* Nutzt die volle Fläche der Container */
         }
 
         .flipped { transform: rotateY(-180deg); }
@@ -115,7 +105,7 @@
 
 <div class="nav-header">
     <button id="backBtn" class="back-btn" onclick="showHome()">← Zurück</button>
-    <h1 id="viewTitle">XanderFoxy's Rezeptbuch</h1>
+    <h1 id="viewTitle">XanderFoxy's Rezepte</h1>
 </div>
 
 <div id="homeView" class="grid">
@@ -128,7 +118,7 @@
     <div class="recipe-tile">
         <div class="tile-inner">
             <div class="front"><img src="Bilder/IMG_1957.jpeg"></div>
-            <div class="back"><h2>Granita</h2><p>Coming Soon</p></div>
+            <div class="back"><h2>Granita</h2><p>Prossimamente</p></div>
         </div>
     </div>
 </div>
@@ -137,7 +127,7 @@
     <div class="recipe-tile" onclick="openBook()">
         <div class="tile-inner">
             <div class="front"><img src="Bilder/IMG_1971.png"></div>
-            <div class="back"><h2>Sicilia Edition</h2><p>Buch öffnen</p></div>
+            <div class="back"><h2>Sicilia Edition</h2><p>Apri libro</p></div>
         </div>
     </div>
 </div>
@@ -173,21 +163,15 @@
         document.getElementById('homeView').style.display = 'grid';
         document.getElementById('cannoliView').style.display = 'none';
         document.getElementById('backBtn').style.display = 'none';
-        document.getElementById('viewTitle').innerText = "XanderFoxy's Rezeptbuch";
+        document.getElementById('viewTitle').innerText = "XanderFoxy's Rezepte";
     }
 
-    function openBook() {
-        document.getElementById('bookOverlay').style.display = 'flex';
-    }
-
+    function openBook() { document.getElementById('bookOverlay').style.display = 'flex'; }
     function closeBook() {
         document.getElementById('bookOverlay').style.display = 'none';
         document.getElementById('flipper').classList.remove('flipped');
     }
-
-    function flipPage() {
-        document.getElementById('flipper').classList.toggle('flipped');
-    }
+    function flipPage() { document.getElementById('flipper').classList.toggle('flipped'); }
 </script>
 
 </body>
