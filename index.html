@@ -65,10 +65,11 @@
             transform: scale(1.4); object-position: center 25%; display: block;
         }
 
+        /* Polaroid Label */
         .polaroid-label {
             position: absolute;
             bottom: 0; left: 0; width: 100%; height: 75px; 
-            display: flex; flex-direction: column;
+            display: flex; flex-direction: column; /* Erlaubt Untertitel */
             justify-content: center; align-items: center;
             padding-bottom: 6px; 
         }
@@ -76,6 +77,7 @@
         .label-instance { display: flex; align-items: center; gap: 10px; }
         .polaroid-label h2 { margin: 0; font-size: 1.8rem; font-family: 'Dancing Script', cursive; color: #333; line-height: 1; }
         
+        /* Filigranere Schrift für die Buchquelle */
         .book-source { 
             font-size: 0.85rem; font-family: 'Playfair Display', serif; 
             font-style: italic; color: #777; margin-top: 4px; font-weight: 300; 
@@ -83,9 +85,8 @@
 
         .flag { width: 22px; height: 14px; display: inline-block; border: 1px solid #eee; flex-shrink: 0; }
         .it { background: linear-gradient(90deg, #008C45 33%, #fff 33%, #fff 66%, #CD212A 66%); }
-        .mx { background: linear-gradient(90deg, #006847 33%, #fff 33%, #fff 66%, #CE1126 66%); }
-        .eg { background: linear-gradient(180deg, #C8102E 33%, #fff 33%, #fff 66%, #000 66%); }
 
+        /* Buch Overlay */
         .overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--overlay-bg); display: none; 
@@ -123,42 +124,14 @@
         <div class="photo-container"><img src="Bilder/IMG_1958.png"></div>
         <div class="polaroid-label"><div class="label-instance"><span class="flag it"></span><h2>Fior di Latte</h2></div></div>
     </div>
-    <div class="recipe-tile" onclick="showSub('semifreddo')">
-        <div class="photo-container"><img src="Bilder/IMG_1362.jpeg"></div>
-        <div class="polaroid-label"><div class="label-instance"><span class="flag it"></span><h2>Semifreddo</h2></div></div>
-    </div>
-    <div class="recipe-tile" onclick="showSub('tiramisu')">
-        <div class="photo-container"><div style="height:100%;background:#e0dbcf"></div></div>
-        <div class="polaroid-label"><div class="label-instance"><span class="flag it"></span><h2>Tiramisu</h2></div></div>
-    </div>
-    <div class="recipe-tile"><div class="photo-container"><div style="height:100%;background:#e0dbcf"></div></div><div class="polaroid-label"><div class="label-instance"><span class="flag eg"></span><h2>Kuschari</h2></div></div></div>
-    <div class="recipe-tile"><div class="photo-container"><div style="height:100%;background:#e0dbcf"></div></div><div class="polaroid-label"><div class="label-instance"><span class="flag mx"></span><h2>Chili con Carne</h2></div></div></div>
-</div>
-
-<div id="semifreddoView" class="grid" style="display: none;">
-    <div class="recipe-tile" onclick="openJamieSemifreddo()">
-        <div class="photo-container"><img src="Bilder/IMG_1362.jpeg"></div>
-        <div class="polaroid-label">
-            <h2>Jamie Cooks Italy</h2>
-            <div class="book-source">Semifreddo al Torrone</div>
-        </div>
-    </div>
-</div>
-
-<div id="tiramisuView" class="grid" style="display: none;">
-    <div class="recipe-tile" onclick="openGennaroTiramisu()">
-        <div class="photo-container"><img src="Bilder/IMG_1366.jpeg"></div>
-        <div class="polaroid-label">
-            <h2>Adriana's Tiramisu</h2>
-            <div class="book-source">Gennaro's Fast Cook Italian</div>
-        </div>
-    </div>
 </div>
 
 <div id="cannoliView" class="grid" style="display: none;">
     <div class="recipe-tile" onclick="openSicilia()">
         <div class="photo-container"><img src="Bilder/IMG_1744.png"></div>
-        <div class="polaroid-label"><h2>Sicilia Edition</h2></div>
+        <div class="polaroid-label">
+            <h2>Sicilia Edition</h2>
+        </div>
     </div>
     <div class="recipe-tile" onclick="openJamieCannoli()">
         <div class="photo-container"><img src="Bilder/IMG_1440.jpeg"></div>
@@ -178,9 +151,7 @@
         sicilia: { steps: [{type:'single', img:'IMG_1745.png'}, {type:'spread', imgL:'IMG_1971.png', imgR:'IMG_1972.png'}, {type:'single', img:'IMG_1744.png'}], start: 1 },
         jamieCannoli: { steps: [{type:'spread', imgL:'IMG_1441.jpeg', imgR:'IMG_1440.jpeg'}], start: 0 },
         jamie: { steps: [{type:'spread', imgL:'IMG_1968.png', imgR:'IMG_1969.png'}], start: 0 },
-        fior: { steps: [{type:'spread', imgL:'IMG_1957.png', imgR:'IMG_1958.png'}], start: 0 },
-        jamieSemifreddo: { steps: [{type:'spread', imgL:'IMG_1405.jpeg', imgR:'IMG_1362.jpeg'}], start: 0 },
-        gennaroTiramisu: { steps: [{type:'spread', imgL:'IMG_1406.jpeg', imgR:'IMG_1366.jpeg'}], start: 0 }
+        fior: { steps: [{type:'spread', imgL:'IMG_1957.png', imgR:'IMG_1958.png'}], start: 0 }
     };
 
     let currentRecipe = null, currentStep = 0;
@@ -209,8 +180,7 @@
 
     function openSicilia() { currentRecipe = recipes.sicilia; currentStep = recipes.sicilia.start; openModal(); }
     function openJamieCannoli() { currentRecipe = recipes.jamieCannoli; currentStep = recipes.jamieCannoli.start; openModal(); }
-    function openJamieSemifreddo() { currentRecipe = recipes.jamieSemifreddo; currentStep = recipes.jamieSemifreddo.start; openModal(); }
-    function openGennaroTiramisu() { currentRecipe = recipes.gennaroTiramisu; currentStep = recipes.gennaroTiramisu.start; openModal(); }
+    function openJamie() { currentRecipe = recipes.jamie; currentStep = recipes.jamie.start; openModal(); }
     function openFior() { currentRecipe = recipes.fior; currentStep = recipes.fior.start; openModal(); }
     function openModal() { document.getElementById('bookOverlay').style.display = 'flex'; renderBook(); }
     function closeBook() { document.getElementById('bookOverlay').style.display = 'none'; }
