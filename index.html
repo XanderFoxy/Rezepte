@@ -11,7 +11,7 @@
             --text-color: #5d4037;
             --overlay-bg: rgba(10, 10, 10, 0.98);
             --polaroid-white: #ffffff;
-            --book-height: 80vh; /* Festgelegte Höhe für alle Buchseiten */
+            --book-max-height: 70vh; /* Begrenzte Höhe gegen den Speisekarten-Look */
         }
 
         body {
@@ -24,7 +24,7 @@
             display: flex; flex-direction: column; align-items: center;
         }
 
-        h1 { font-family: 'Dancing Script', cursive; font-size: clamp(2.5rem, 8vw, 4rem); text-align: center; margin: 10px 0 20px 0; }
+        h1 { font-family: 'Dancing Script', cursive; font-size: clamp(2.5rem, 8vw, 4rem); text-align: center; margin: 10px 0 30px 0; }
 
         .nav-header { width: 100%; max-width: 1200px; display: flex; justify-content: center; position: relative; }
         .back-btn { 
@@ -34,20 +34,21 @@
             z-index: 100;
         }
 
-        /* Polaroid Grid - Kompakt & Bündig */
+        /* Polaroid Grid - Symmetrische Abstände */
         .grid { 
             display: grid; 
             grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); 
             column-gap: 30px; 
-            row-gap: 15px; 
-            align-content: start; /* Zieht alle Reihen nach oben zusammen */
+            row-gap: 30px; /* Jetzt konsistent mit dem horizontalen Abstand */
+            align-content: start;
             width: 100%; max-width: 1200px; 
         }
 
         .recipe-tile { 
             background: var(--polaroid-white);
             aspect-ratio: 88 / 107;
-            padding: 8px 8px 65px 8px; /* Originale Polaroid-Ränder-Verhältnisse */
+            /* Authentische breitere Ränder (ca. 6mm oben/seite) */
+            padding: 16px 16px 75px 16px; 
             box-shadow: 0 10px 25px rgba(0,0,0,0.12);
             transition: transform 0.3s ease;
             cursor: pointer;
@@ -62,7 +63,7 @@
             width: 100%;
             aspect-ratio: 1 / 1;
             overflow: hidden;
-            background: #fff; /* Reinweiß falls Zoom nicht reicht */
+            background: #fff;
             position: relative;
         }
 
@@ -70,17 +71,19 @@
             width: 100%;
             height: 100%;
             object-fit: cover; 
-            transform: scale(1.5); /* Maximaler Zoom für Full-Bleed Look */
+            transform: scale(1.5); 
             object-position: center 25%; 
             display: block;
         }
 
-        /* Text-Zentrierung im unteren Bereich */
+        /* Polaroid Label - Mittig im breiten Rand platziert */
         .polaroid-label {
             position: absolute;
             bottom: 0; left: 0; width: 100%;
-            height: 65px;
-            display: flex; justify-content: center; align-items: center; gap: 10px;
+            height: 75px; /* Korrespondierend zum Padding unten */
+            display: flex; justify-content: center; align-items: center; gap: 8px;
+            /* Alles ein Stück nach unten gerückt für die optische Mitte */
+            padding-top: 5px; 
         }
 
         .polaroid-label h2 { 
@@ -88,7 +91,6 @@
             font-size: 1.8rem; 
             font-family: 'Dancing Script', cursive; 
             color: #333;
-            transform: translateY(-12px); /* Optischer Lift für perfekte Mitte */
         }
 
         .flag { width: 22px; height: 14px; display: inline-block; border: 1px solid #eee; }
@@ -96,7 +98,7 @@
         .mx { background: linear-gradient(90deg, #006847 33%, #fff 33%, #fff 66%, #CE1126 66%); }
         .eg { background: linear-gradient(180deg, #C8102E 33%, #fff 33%, #fff 66%, #000 66%); }
 
-        /* Buch Overlay - Konsistente Höhe */
+        /* Buch Overlay - Fix gegen vertikale Streckung */
         .overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--overlay-bg); display: none; 
@@ -105,24 +107,24 @@
 
         #book-viewer { 
             display: flex; align-items: center; justify-content: center; 
-            width: 95vw; height: var(--book-height); 
+            width: 95vw; height: var(--book-max-height); 
         }
 
         .view-spread { 
             display: flex !important; flex-direction: row !important; 
-            width: 100%; height: var(--book-height); justify-content: center; gap: 2px;
+            width: 100%; height: 100%; justify-content: center; gap: 4px;
         }
 
         .view-single { 
             display: flex; justify-content: center; 
-            width: 100%; height: var(--book-height); 
+            width: 100%; height: 100%; 
         }
 
         .book-page-img {
             max-width: 50%; 
-            height: 100%; /* Erzwingt gleiche Höhe für alle Seiten */
+            height: 100%; /* Orientiert sich streng an der Buch-Höhe */
             width: auto;
-            object-fit: contain;
+            object-fit: contain; /* Verhindert das "Speisekarten-Gefühl" */
             background: white; box-shadow: 0 0 50px rgba(0,0,0,0.8);
             cursor: pointer; display: block;
         }
