@@ -11,8 +11,7 @@
             --text-color: #5d4037;
             --overlay-bg: rgba(10, 10, 10, 0.98);
             --polaroid-white: #ffffff;
-            /* Die feste Höhe für alle Buchseiten (Single & Spread) */
-            --master-book-height: 75vh; 
+            --fixed-book-height: 75vh; /* Definierte Master-Höhe für alle Seiten */
         }
 
         body {
@@ -35,7 +34,7 @@
             z-index: 100;
         }
 
-        /* Symmetrisches Polaroid Grid */
+        /* Polaroid Grid - Symmetrische Abstände (30px) */
         .grid { 
             display: grid; 
             grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); 
@@ -68,29 +67,30 @@
         }
 
         .photo-container img {
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%;
             object-fit: cover; 
-            transform: scale(1.5); 
+            transform: scale(1.4); 
             object-position: center 25%; 
             display: block;
         }
 
-        /* Polaroid Label - Präzise vertikale Zentrierung */
+        /* Polaroid Label - Die "Instanz" wird hier als Ganzes zentriert */
         .polaroid-label {
             position: absolute;
             bottom: 0; left: 0; width: 100%;
-            height: 75px; 
-            display: flex; justify-content: center; align-items: center; gap: 8px;
-            /* Der "kleine Tuck" nach unten für die optische Mitte */
-            padding-top: 4px; 
+            height: 75px; /* Der breite untere Rand */
+            display: flex; 
+            justify-content: center; 
+            align-items: center; /* Vertikale Zentrierung der gesamten Instanz */
+            gap: 10px; /* Ursprüngliches Verhältnis Flagge zu Schrift */
         }
 
         .polaroid-label h2 { 
-            margin: 0; 
+            margin: 0; padding: 0;
             font-size: 1.8rem; 
             font-family: 'Dancing Script', cursive; 
             color: #333;
+            line-height: 1;
         }
 
         .flag { width: 22px; height: 14px; display: inline-block; border: 1px solid #eee; }
@@ -98,7 +98,7 @@
         .mx { background: linear-gradient(90deg, #006847 33%, #fff 33%, #fff 66%, #CE1126 66%); }
         .eg { background: linear-gradient(180deg, #C8102E 33%, #fff 33%, #fff 66%, #000 66%); }
 
-        /* Buch Overlay - Feste Höhe für alle Ansichten */
+        /* Buch Overlay - Master-Höhen-Logik */
         .overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--overlay-bg); display: none; 
@@ -107,32 +107,33 @@
 
         #book-viewer { 
             display: flex; align-items: center; justify-content: center; 
-            width: 95vw; height: var(--master-book-height); 
+            width: 95vw; height: var(--fixed-book-height); 
         }
 
-        .view-spread { 
-            display: flex !important; flex-direction: row !important; 
-            width: 100%; height: 100%; justify-content: center; gap: 4px;
-        }
-
-        .view-single { 
-            display: flex; justify-content: center; 
-            width: 100%; height: 100%; 
+        .view-spread, .view-single { 
+            display: flex !important; 
+            flex-direction: row !important; 
+            height: 100%; 
+            width: 100%; 
+            justify-content: center; 
+            align-items: center;
+            gap: 4px;
         }
 
         .book-page-img {
-            /* Bilder passen sich der festen Container-Höhe an */
+            /* Zwingende Kopplung der Höhe an den Master-Container */
             height: 100%; 
             width: auto;
-            max-width: 50%;
+            max-width: 48%; /* Bei Doppelseite */
             object-fit: contain;
             background: white; 
             box-shadow: 0 0 50px rgba(0,0,0,0.8);
-            cursor: pointer; display: block;
+            cursor: pointer; 
+            display: block;
         }
 
         .view-single .book-page-img { 
-            max-width: 80%; /* Einzelseite zentriert, aber gleiche Höhe */
+            max-width: 90%; /* Einzelseite nutzt Breite, aber Höhe bleibt durch 100% identisch */
         }
     </style>
 </head>
