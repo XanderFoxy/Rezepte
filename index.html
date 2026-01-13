@@ -11,7 +11,8 @@
             --text-color: #5d4037;
             --overlay-bg: rgba(10, 10, 10, 0.98);
             --polaroid-white: #ffffff;
-            --fixed-book-height: 75vh; /* Definierte Master-Höhe für alle Seiten */
+            /* Diese Höhe ist das Gesetz für alle Buchansichten */
+            --book-height: 70vh; 
         }
 
         body {
@@ -34,7 +35,7 @@
             z-index: 100;
         }
 
-        /* Polaroid Grid - Symmetrische Abstände (30px) */
+        /* Polaroid Grid */
         .grid { 
             display: grid; 
             grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); 
@@ -74,15 +75,22 @@
             display: block;
         }
 
-        /* Polaroid Label - Die "Instanz" wird hier als Ganzes zentriert */
+        /* Polaroid Label - Die Instanz (Flagge + Text) als Einheit */
         .polaroid-label {
             position: absolute;
             bottom: 0; left: 0; width: 100%;
-            height: 75px; /* Der breite untere Rand */
+            height: 75px; 
             display: flex; 
             justify-content: center; 
-            align-items: center; /* Vertikale Zentrierung der gesamten Instanz */
-            gap: 10px; /* Ursprüngliches Verhältnis Flagge zu Schrift */
+            align-items: center; 
+            /* Hier wird die gesamte Einheit leicht nach oben versetzt */
+            padding-bottom: 12px; 
+        }
+
+        .label-instance {
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Originales Verhältnis zwischen Flagge und Schrift */
         }
 
         .polaroid-label h2 { 
@@ -93,12 +101,12 @@
             line-height: 1;
         }
 
-        .flag { width: 22px; height: 14px; display: inline-block; border: 1px solid #eee; }
+        .flag { width: 22px; height: 14px; display: inline-block; border: 1px solid #eee; flex-shrink: 0; }
         .it { background: linear-gradient(90deg, #008C45 33%, #fff 33%, #fff 66%, #CD212A 66%); }
         .mx { background: linear-gradient(90deg, #006847 33%, #fff 33%, #fff 66%, #CE1126 66%); }
         .eg { background: linear-gradient(180deg, #C8102E 33%, #fff 33%, #fff 66%, #000 66%); }
 
-        /* Buch Overlay - Master-Höhen-Logik */
+        /* Buch Overlay - Absolute Höhen-Kontrolle */
         .overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--overlay-bg); display: none; 
@@ -107,13 +115,13 @@
 
         #book-viewer { 
             display: flex; align-items: center; justify-content: center; 
-            width: 95vw; height: var(--fixed-book-height); 
+            width: 95vw; height: var(--book-height); 
         }
 
         .view-spread, .view-single { 
             display: flex !important; 
             flex-direction: row !important; 
-            height: 100%; 
+            height: var(--book-height); 
             width: 100%; 
             justify-content: center; 
             align-items: center;
@@ -121,8 +129,9 @@
         }
 
         .book-page-img {
-            /* Zwingende Kopplung der Höhe an den Master-Container */
+            /* Zwingende Kopplung der Höhe, egal ob Single oder Spread */
             height: 100%; 
+            max-height: 100%;
             width: auto;
             max-width: 48%; /* Bei Doppelseite */
             object-fit: contain;
@@ -133,7 +142,8 @@
         }
 
         .view-single .book-page-img { 
-            max-width: 90%; /* Einzelseite nutzt Breite, aber Höhe bleibt durch 100% identisch */
+            /* Einzelseite behält die gleiche Höhe, wird nur horizontal zentriert */
+            max-width: 90%; 
         }
     </style>
 </head>
@@ -147,27 +157,33 @@
 <div id="homeView" class="grid">
     <div class="recipe-tile" onclick="showSub('cannoli')">
         <div class="photo-container"><img src="Bilder/IMG_1744.png"></div>
-        <div class="polaroid-label"><span class="flag it"></span><h2>Cannoli</h2></div>
+        <div class="polaroid-label">
+            <div class="label-instance"><span class="flag it"></span><h2>Cannoli</h2></div>
+        </div>
     </div>
     <div class="recipe-tile" onclick="showSub('granita')">
         <div class="photo-container"><img src="Bilder/IMG_1969.png"></div>
-        <div class="polaroid-label"><span class="flag it"></span><h2>Granita</h2></div>
+        <div class="polaroid-label">
+            <div class="label-instance"><span class="flag it"></span><h2>Granita</h2></div>
+        </div>
     </div>
     <div class="recipe-tile" onclick="openFior()">
         <div class="photo-container"><img src="Bilder/IMG_1958.png"></div>
-        <div class="polaroid-label"><span class="flag it"></span><h2>Fior di Latte</h2></div>
+        <div class="polaroid-label">
+            <div class="label-instance"><span class="flag it"></span><h2>Fior di Latte</h2></div>
+        </div>
     </div>
     <div class="recipe-tile">
         <div class="photo-container"><div style="height:100%;background:#e0dbcf"></div></div>
-        <div class="polaroid-label"><span class="flag eg"></span><h2>Kuschari</h2></div>
+        <div class="polaroid-label"><div class="label-instance"><span class="flag eg"></span><h2>Kuschari</h2></div></div>
     </div>
     <div class="recipe-tile">
         <div class="photo-container"><div style="height:100%;background:#e0dbcf"></div></div>
-        <div class="polaroid-label"><span class="flag mx"></span><h2>Chili con Carne</h2></div>
+        <div class="polaroid-label"><div class="label-instance"><span class="flag mx"></span><h2>Chili con Carne</h2></div></div>
     </div>
     <div class="recipe-tile" onclick="showSub('tiramisu')">
         <div class="photo-container"><div style="height:100%;background:#e0dbcf"></div></div>
-        <div class="polaroid-label"><span class="flag it"></span><h2>Tiramisu</h2></div>
+        <div class="polaroid-label"><div class="label-instance"><span class="flag it"></span><h2>Tiramisu</h2></div></div>
     </div>
 </div>
 
