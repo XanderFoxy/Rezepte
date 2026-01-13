@@ -25,12 +25,12 @@
 
         h1 { font-family: 'Dancing Script', cursive; font-size: clamp(2.5rem, 8vw, 4rem); text-align: center; margin: 10px 0 30px 0; }
 
-        .nav-header { width: 100%; max-width: 1200px; display: flex; justify-content: center; position: relative; }
+        .nav-header { width: 100%; max-width: 1200px; display: flex; justify-content: center; position: relative; height: 60px; }
         .back-btn { 
-            position: absolute; left: 10px; display: none; background: #fff; 
+            position: absolute; left: 0; display: none; background: #fff; 
             border: 1px solid var(--text-color); color: var(--text-color); 
             padding: 8px 15px; cursor: pointer; font-family: 'Dancing Script', cursive; font-size: 1.2rem;
-            z-index: 100;
+            z-index: 1100;
         }
 
         .grid { 
@@ -89,7 +89,7 @@
         .overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--overlay-bg); display: none; 
-            justify-content: center; align-items: center; z-index: 1000;
+            justify-content: center; align-items: center; z-index: 2000;
         }
 
         #book-viewer { display: flex; align-items: center; justify-content: center; width: 100vw; height: 100vh; }
@@ -135,6 +135,30 @@
     <div class="recipe-tile"><div class="photo-container"><div style="height:100%;background:#e0dbcf"></div></div><div class="polaroid-label"><div class="label-instance"><span class="flag mx"></span><h2>Chili con Carne</h2></div></div></div>
 </div>
 
+<div id="cannoliView" class="grid" style="display: none;">
+    <div class="recipe-tile" onclick="openSicilia()">
+        <div class="photo-container"><img src="Bilder/IMG_1744.png"></div>
+        <div class="polaroid-label"><h2>Sicilia Edition</h2></div>
+    </div>
+    <div class="recipe-tile" onclick="openJamieCannoli()">
+        <div class="photo-container"><img src="Bilder/IMG_1440.jpeg"></div>
+        <div class="polaroid-label">
+            <h2>Cannoli Siciliana</h2>
+            <div class="book-source">Jamie Oliver Edition</div>
+        </div>
+    </div>
+</div>
+
+<div id="granitaView" class="grid" style="display: none;">
+    <div class="recipe-tile" onclick="openJamie()">
+        <div class="photo-container"><img src="Bilder/IMG_1969.png"></div>
+        <div class="polaroid-label">
+            <h2>Jamie Edition</h2>
+            <div class="book-source">Granita</div>
+        </div>
+    </div>
+</div>
+
 <div id="semifreddoView" class="grid" style="display: none;">
     <div class="recipe-tile" onclick="openJamieSemifreddo()">
         <div class="photo-container"><img src="Bilder/IMG_1362.png"></div>
@@ -155,20 +179,6 @@
     </div>
 </div>
 
-<div id="cannoliView" class="grid" style="display: none;">
-    <div class="recipe-tile" onclick="openSicilia()">
-        <div class="photo-container"><img src="Bilder/IMG_1744.png"></div>
-        <div class="polaroid-label"><h2>Sicilia Edition</h2></div>
-    </div>
-    <div class="recipe-tile" onclick="openJamieCannoli()">
-        <div class="photo-container"><img src="Bilder/IMG_1440.png"></div>
-        <div class="polaroid-label">
-            <h2>Cannoli Siciliana</h2>
-            <div class="book-source">Jamie Oliver Edition</div>
-        </div>
-    </div>
-</div>
-
 <div class="overlay" id="bookOverlay" onclick="closeBook()">
     <div id="book-viewer"><div id="content-area"></div></div>
 </div>
@@ -176,7 +186,7 @@
 <script>
     const recipes = {
         sicilia: { steps: [{type:'single', img:'IMG_1745.png'}, {type:'spread', imgL:'IMG_1971.png', imgR:'IMG_1972.png'}, {type:'single', img:'IMG_1744.png'}], start: 1 },
-        jamieCannoli: { steps: [{type:'spread', imgL:'IMG_1441.png', imgR:'IMG_1440.png'}], start: 0 },
+        jamieCannoli: { steps: [{type:'spread', imgL:'IMG_1441.jpeg', imgR:'IMG_1440.jpeg'}], start: 0 },
         jamie: { steps: [{type:'spread', imgL:'IMG_1968.png', imgR:'IMG_1969.png'}], start: 0 },
         fior: { steps: [{type:'spread', imgL:'IMG_1957.png', imgR:'IMG_1958.png'}], start: 0 },
         jamieSemifreddo: { steps: [{type:'spread', imgL:'IMG_1405.png', imgR:'IMG_1362.png'}], start: 0 },
@@ -215,11 +225,17 @@
     function openFior() { currentRecipe = recipes.fior; currentStep = recipes.fior.start; openModal(); }
     function openModal() { document.getElementById('bookOverlay').style.display = 'flex'; renderBook(); }
     function closeBook() { document.getElementById('bookOverlay').style.display = 'none'; }
+
     function showSub(cat) { 
         document.querySelectorAll('.grid').forEach(g => g.style.display = 'none');
-        document.getElementById(cat + 'View').style.display = 'grid'; 
-        document.getElementById('backBtn').style.display = 'block'; 
+        const subView = document.getElementById(cat + 'View');
+        if (subView) {
+            subView.style.display = 'grid'; 
+            document.getElementById('backBtn').style.display = 'block'; 
+            document.getElementById('homeView').style.display = 'none';
+        }
     }
+
     function showHome() { 
         document.querySelectorAll('.grid').forEach(g => g.style.display = 'none'); 
         document.getElementById('homeView').style.display = 'grid'; 
