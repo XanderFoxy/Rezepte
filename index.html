@@ -129,14 +129,6 @@
         <div class="photo-container"><img src="Bilder/IMG_1366.png"></div>
         <div class="polaroid-label"><div class="label-instance"><span class="flag it"></span><h2>Tiramisu</h2></div></div>
     </div>
-    <div class="recipe-tile">
-        <div class="photo-container"><div style="height:100%;background:#e0dbcf"></div></div>
-        <div class="polaroid-label"><div class="label-instance"><h2>Kuschari</h2></div></div>
-    </div>
-    <div class="recipe-tile">
-        <div class="photo-container"><div style="height:100%;background:#e0dbcf"></div></div>
-        <div class="polaroid-label"><div class="label-instance"><h2>Chili con Carne</h2></div></div>
-    </div>
 </div>
 
 <div id="cannoliView" class="grid" style="display: none;">
@@ -202,14 +194,16 @@
     function renderBook() {
         const area = document.getElementById('content-area');
         const step = currentRecipe.steps[currentStep];
+        const path = "Bilder/"; // Konsequenter Ordnerpfad
+        
         if (step.type === 'single') {
             area.className = "view-single";
-            area.innerHTML = `<img src="Bilder/${step.img}" class="book-page-img" onclick="event.stopPropagation(); handleNav(event, 'center')">`;
+            area.innerHTML = `<img src="${path}${step.img}" class="book-page-img" onclick="event.stopPropagation(); handleNav(event, 'center')">`;
         } else {
             area.className = "view-spread";
             area.innerHTML = `
-                <img src="Bilder/${step.imgL}" class="book-page-img" onclick="event.stopPropagation(); handleNav(event, 'left')">
-                <img src="Bilder/${step.imgR}" class="book-page-img" onclick="event.stopPropagation(); handleNav(event, 'right')">`;
+                <img src="${path}${step.imgL}" class="book-page-img" onclick="event.stopPropagation(); handleNav(event, 'left')">
+                <img src="${path}${step.imgR}" class="book-page-img" onclick="event.stopPropagation(); handleNav(event, 'right')">`;
         }
     }
 
@@ -226,18 +220,17 @@
     function openJamieGranita() { currentRecipe = recipes.jamieGranita; currentStep = recipes.jamieGranita.start; openModal(); }
     function openJamieSemifreddo() { currentRecipe = recipes.jamieSemifreddo; currentStep = recipes.jamieSemifreddo.start; openModal(); }
     function openGennaroTiramisu() { currentRecipe = recipes.gennaroTiramisu; currentStep = recipes.gennaroTiramisu.start; openModal(); }
-    function openJamie() { currentRecipe = recipes.jamie; currentStep = recipes.jamie.start; openModal(); }
     function openFior() { currentRecipe = recipes.fior; currentStep = recipes.fior.start; openModal(); }
     function openModal() { document.getElementById('bookOverlay').style.display = 'flex'; renderBook(); }
     function closeBook() { document.getElementById('bookOverlay').style.display = 'none'; }
 
     function showSub(cat) { 
-        document.querySelectorAll('.grid').forEach(g => g.style.display = 'none');
+        document.getElementById('homeView').style.display = 'none';
+        document.querySelectorAll('.grid').forEach(g => { if(g.id !== 'homeView') g.style.display = 'none'; });
         const sub = document.getElementById(cat + 'View');
         if (sub) {
             sub.style.display = 'grid'; 
             document.getElementById('backBtn').style.display = 'block'; 
-            document.getElementById('homeView').style.display = 'none';
         }
     }
 
