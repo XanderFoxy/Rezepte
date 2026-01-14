@@ -23,7 +23,7 @@
             display: flex; flex-direction: column; align-items: center;
         }
 
-        /* Nav-Header: Original-Position (60px/20px) */
+        /* Nav-Header: Original-Positionierung (60px/20px) */
         .nav-header { 
             width: 100%; 
             max-width: 1200px; 
@@ -115,7 +115,7 @@
             flex-direction: row !important; 
             justify-content: center; 
             align-items: center; 
-            gap: 0 !important; 
+            gap: 0 !important; /* Nahtloser Übergang */
             flex-wrap: nowrap !important; 
         }
         
@@ -186,6 +186,14 @@
         <div class="photo-container"><img src="Bilder/IMG_1838.jpeg"></div>
         <div class="polaroid-label"><h2>Limone Edition</h2><div class="book-source">Two Greedy Italians</div></div>
     </div>
+    <div class="recipe-tile" onclick="openBlutGranita()">
+        <div class="photo-container"><img src="Bilder/IMG_1987.png"></div>
+        <div class="polaroid-label"><h2>Blutorangen Edition</h2><div class="book-source">Granita</div></div>
+    </div>
+    <div class="recipe-tile" onclick="openCoffeeGranita()">
+        <div class="photo-container"><img src="Bilder/IMG_1746.jpeg"></div>
+        <div class="polaroid-label"><h2>Coffee Edition</h2><div class="book-source">Granita</div></div>
+    </div>
 </div>
 
 <div id="semifreddoView" class="grid" style="display: none;">
@@ -225,7 +233,6 @@
         sicilia: { steps: [{type:'single', img:'IMG_1745.png'}, {type:'spread', imgL:'IMG_1971.png', imgR:'IMG_1972.png'}, {type:'single', img:'IMG_1744.png'}], start: 1 },
         jamieCannoli: { steps: [{type:'spread', imgL:'IMG_1441.jpeg', imgR:'IMG_1440.jpeg'}], start: 0 },
         jamieGranita: { steps: [{type:'spread', imgL:'IMG_1968.png', imgR:'IMG_1969.png'}], start: 0 },
-        // KORREKTE LIMONE LOGIK: 1838, 1839, 1840 sind .jpeg
         limoneGranita: { 
             steps: [
                 {type:'spread', imgL:'IMG_1984.png', imgR:'IMG_1838.jpeg'}, 
@@ -233,6 +240,8 @@
             ], 
             start: 0 
         },
+        blutGranita: { steps: [{type:'single', img:'IMG_1987.png'}], start: 0 },
+        coffeeGranita: { steps: [{type:'spread', imgL:'IMG_1988.png', imgR:'IMG_1746.jpeg'}], start: 0 },
         fior: { steps: [{type:'spread', imgL:'IMG_1957.png', imgR:'IMG_1958.png'}], start: 0 },
         jamieSemifreddo: { steps: [{type:'spread', imgL:'IMG_1405.png', imgR:'IMG_1362.png'}], start: 0 },
         gennaroTiramisu: { steps: [{type:'spread', imgL:'IMG_1406.png', imgR:'IMG_1366.png'}], start: 0 },
@@ -274,6 +283,8 @@
     function openJamieCannoli() { currentRecipe = recipes.jamieCannoli; currentStep = recipes.jamieCannoli.start; openModal(); }
     function openJamieGranita() { currentRecipe = recipes.jamieGranita; currentStep = recipes.jamieGranita.start; openModal(); }
     function openLimoneGranita() { currentRecipe = recipes.limoneGranita; currentStep = 0; openModal(); }
+    function openBlutGranita() { currentRecipe = recipes.blutGranita; currentStep = 0; openModal(); }
+    function openCoffeeGranita() { currentRecipe = recipes.coffeeGranita; currentStep = 0; openModal(); }
     function openJamieSemifreddo() { currentRecipe = recipes.jamieSemifreddo; currentStep = recipes.jamieSemifreddo.start; openModal(); }
     function openGennaroTiramisu() { currentRecipe = recipes.gennaroTiramisu; currentStep = recipes.gennaroTiramisu.start; openModal(); }
     function openFior() { currentRecipe = recipes.fior; currentStep = recipes.fior.start; openModal(); }
