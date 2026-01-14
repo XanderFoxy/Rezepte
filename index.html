@@ -23,6 +23,7 @@
             display: flex; flex-direction: column; align-items: center;
         }
 
+        /* Nav-Header: Original-Positionierung wiederhergestellt */
         .nav-header { 
             width: 100%; 
             max-width: 1200px; 
@@ -37,6 +38,7 @@
             font-family: 'Dancing Script', cursive; 
             font-size: clamp(2.5rem, 8vw, 4rem); 
             text-align: center; 
+            /* Exakte Original-Abstände */
             margin: 10px 0 30px 0; 
             line-height: 1.2;
         }
@@ -109,7 +111,7 @@
 
         #book-viewer { display: flex; align-items: center; justify-content: center; width: 100vw; height: 100vh; }
         
-        /* FIX: gap auf 0 gesetzt für nahtlose Doppelseiten */
+        /* Absolut kein Abstand zwischen den Seiten */
         .view-spread { 
             display: flex !important; 
             flex-direction: row !important; 
@@ -122,7 +124,7 @@
         .view-single { display: flex !important; justify-content: center; align-items: center; }
         
         .book-page-img {
-            max-height: 85vh; width: auto; height: auto; max-width: 48vw; /* Leicht vergrößert für besseren Schluss */
+            max-height: 85vh; width: auto; height: auto; max-width: 48vw;
             object-fit: contain; box-shadow: 0 0 50px rgba(0,0,0,0.8);
             cursor: pointer; display: block;
         }
