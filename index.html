@@ -157,7 +157,7 @@
         <div class="polaroid-label"><div class="label-instance"><span class="flag it"></span><h2>Tiramisu</h2></div></div>
     </div>
     <div class="recipe-tile" onclick="showSub('koshari', 'Koshari')">
-        <div class="photo-container"><img src="Bilder/Koshari_Main.png"></div>
+        <div class="photo-container"><img src="Bilder/IMG_1263.jpeg"></div>
         <div class="polaroid-label"><div class="label-instance"><span class="flag eg"></span><h2>Koshari</h2></div></div>
     </div>
     <div class="recipe-tile" onclick="showSub('chili', 'Chili con Carne')">
@@ -212,7 +212,7 @@
 
 <div id="koshariView" class="grid" style="display: none;">
     <div class="recipe-tile" onclick="openKoshariRecipe()">
-        <div class="photo-container"><img src="Bilder/Koshari_Main.png"></div>
+        <div class="photo-container"><img src="Bilder/IMG_1263.jpeg"></div>
         <div class="polaroid-label"><h2>Traditionell</h2><div class="book-source">Ägypten</div></div>
     </div>
 </div>
@@ -245,7 +245,16 @@
         fior: { steps: [{type:'spread', imgL:'IMG_1957.png', imgR:'IMG_1958.png'}], start: 0 },
         jamieSemifreddo: { steps: [{type:'spread', imgL:'IMG_1405.png', imgR:'IMG_1362.png'}], start: 0 },
         gennaroTiramisu: { steps: [{type:'spread', imgL:'IMG_1406.png', imgR:'IMG_1366.png'}], start: 0 },
-        koshari: { steps: [{type:'single', img:'Koshari_Rezept.png'}], start: 0 },
+        
+        /* AKTUALISIERT: Koshari mit den neuen IMG_ Präfixen und .jpeg-Endungen als Doppelseiten */
+        koshari: { 
+            steps: [
+                {type:'spread', imgL:'IMG_1263.jpeg', imgR:'IMG_12632.jpeg'},
+                {type:'spread', imgL:'IMG_1264.jpeg', imgR:'IMG_12642.jpeg'}
+            ], 
+            start: 0 
+        },
+        
         chili: { steps: [{type:'single', img:'Chili_Rezept.png'}], start: 0 }
     };
 
