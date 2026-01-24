@@ -97,7 +97,6 @@
             font-style: italic; color: #777; margin-top: 4px; font-weight: 300; 
         }
 
-        /* FLAGGEN-DEFINITIONEN */
         .flag { width: 22px; height: 14px; display: inline-block; border: 1px solid #eee; flex-shrink: 0; }
         .it { background: linear-gradient(90deg, #008C45 33%, #fff 33%, #fff 66%, #CD212A 66%); }
         .eg { background: linear-gradient(180deg, #C1272D 33.3%, #fff 33.3%, #fff 66.6%, #000 66.6%); }
@@ -271,7 +270,13 @@
             ], 
             start: 0 
         },
-        chili: { steps: [{type:'single', img:'Chili_Rezept.png'}], start: 0 }
+        /* AKTUALISIERT: Chili mit den neuen .jpeg Doppelseiten */
+        chili: { 
+            steps: [
+                {type:'spread', imgL:'IMG_1682.jpeg', imgR:'IMG_16822.jpeg'}
+            ], 
+            start: 0 
+        }
     };
 
     let currentRecipe = null, currentStep = 0;
