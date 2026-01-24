@@ -23,7 +23,6 @@
             display: flex; flex-direction: column; align-items: center;
         }
 
-        /* Nav-Header: Original-Positionierung (60px/20px) */
         .nav-header { 
             width: 100%; 
             max-width: 1200px; 
@@ -38,7 +37,7 @@
             font-family: 'Dancing Script', cursive; 
             font-size: clamp(2.5rem, 8vw, 4rem); 
             text-align: center; 
-            margin: 10px 0 30px 0; /* Exakte Original-Abstände */
+            margin: 10px 0 30px 0; 
             line-height: 1.2;
         }
 
@@ -115,7 +114,7 @@
             flex-direction: row !important; 
             justify-content: center; 
             align-items: center; 
-            gap: 0 !important; /* Nahtloser Übergang */
+            gap: 0 !important; 
             flex-wrap: nowrap !important; 
         }
         
@@ -159,6 +158,10 @@
     <div class="recipe-tile" onclick="showSub('koshari', 'Koshari')">
         <div class="photo-container"><img src="Bilder/IMG_1263.jpeg"></div>
         <div class="polaroid-label"><div class="label-instance"><span class="flag eg"></span><h2>Koshari</h2></div></div>
+    </div>
+    <div class="recipe-tile" onclick="showSub('sanSebastian', 'San Sebastian Cheesecake')">
+        <div class="photo-container"><img src="Bilder/IMG_2323.png"></div>
+        <div class="polaroid-label"><div class="label-instance"><h2>San Sebastian Cheesecake</h2></div></div>
     </div>
     <div class="recipe-tile" onclick="showSub('chili', 'Chili con Carne')">
         <div class="photo-container"><img src="Bilder/Chili_Main.png"></div>
@@ -217,6 +220,13 @@
     </div>
 </div>
 
+<div id="sanSebastianView" class="grid" style="display: none;">
+    <div class="recipe-tile" onclick="openSanSebastianRecipe()">
+        <div class="photo-container"><img src="Bilder/IMG_2323.png"></div>
+        <div class="polaroid-label"><h2>Klassisch</h2><div class="book-source">San Sebastian</div></div>
+    </div>
+</div>
+
 <div id="chiliView" class="grid" style="display: none;">
     <div class="recipe-tile" onclick="openChiliRecipe()">
         <div class="photo-container"><img src="Bilder/Chili_Main.png"></div>
@@ -245,8 +255,6 @@
         fior: { steps: [{type:'spread', imgL:'IMG_1957.png', imgR:'IMG_1958.png'}], start: 0 },
         jamieSemifreddo: { steps: [{type:'spread', imgL:'IMG_1405.png', imgR:'IMG_1362.png'}], start: 0 },
         gennaroTiramisu: { steps: [{type:'spread', imgL:'IMG_1406.png', imgR:'IMG_1366.png'}], start: 0 },
-        
-        /* AKTUALISIERT: Koshari mit den neuen IMG_ Präfixen und .jpeg-Endungen als Doppelseiten */
         koshari: { 
             steps: [
                 {type:'spread', imgL:'IMG_1263.jpeg', imgR:'IMG_12632.jpeg'},
@@ -254,7 +262,12 @@
             ], 
             start: 0 
         },
-        
+        sanSebastian: { 
+            steps: [
+                {type:'spread', imgL:'IMG_2323.png', imgR:'IMG_2321.png'}
+            ], 
+            start: 0 
+        },
         chili: { steps: [{type:'single', img:'Chili_Rezept.png'}], start: 0 }
     };
 
@@ -298,6 +311,7 @@
     function openGennaroTiramisu() { currentRecipe = recipes.gennaroTiramisu; currentStep = recipes.gennaroTiramisu.start; openModal(); }
     function openFior() { currentRecipe = recipes.fior; currentStep = recipes.fior.start; openModal(); }
     function openKoshariRecipe() { currentRecipe = recipes.koshari; currentStep = 0; openModal(); }
+    function openSanSebastianRecipe() { currentRecipe = recipes.sanSebastian; currentStep = 0; openModal(); }
     function openChiliRecipe() { currentRecipe = recipes.chili; currentStep = 0; openModal(); }
 
     function showSub(cat, title) { 
